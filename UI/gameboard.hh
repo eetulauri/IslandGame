@@ -12,5 +12,7 @@ public:
     GameBoard();
     ~GameBoard();
 
+    void addHex(std::shared_ptr<Common::Hex> newHex) = 0;
+
 };
 #endif // GAMEBOARD_HH

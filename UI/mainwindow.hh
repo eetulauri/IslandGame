@@ -1,7 +1,11 @@
 #ifndef MAINWINDOW_HH
 #define MAINWINDOW_HH
 
+#include "graphichex.hh"
+
 #include <QMainWindow>
+#include <QGraphicsScene>
+#include <QGraphicsView>
 
 
 class MainWindow : public QMainWindow
@@ -12,6 +16,7 @@ public:
     ~MainWindow();
 
 private:
+    void setScene();
 
 };
 
