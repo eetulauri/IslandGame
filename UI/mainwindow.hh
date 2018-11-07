@@ -2,6 +2,9 @@
 #define MAINWINDOW_HH
 
 #include "graphichex.hh"
+#include "gameboard.hh"
+#include "gamestate.hh"
+#include "gameengine.hh"
 
 #include <QMainWindow>
 #include <QGraphicsScene>
@@ -17,6 +20,11 @@ public:
 
 private:
     void setScene();
+
+    GameBoard *gameboard_;
+    GameState *gamestate_;
+    Logic::GameEngine *gameengine_;
+
 
 };
 
