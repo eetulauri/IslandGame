@@ -16,8 +16,6 @@ MainUI::MainUI(std::shared_ptr<Student::GameBoard> gameBoard,
     ui->graphicsView->setScene(scene);
     scene_ = scene;
 
-
-
     drawHex();
 }
 

@@ -18,7 +18,9 @@ class MainUI : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainUI(QWidget *parent = 0);
+    explicit MainUI(std::shared_ptr<Student::GameBoard> gameBoard,
+                    std::shared_ptr<Student::GameState> gameState,
+                    QWidget *parent = 0);
     ~MainUI();
 
     void drawHex();
