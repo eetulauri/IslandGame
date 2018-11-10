@@ -16,10 +16,10 @@ int main(int argc, char *argv[])
 
     QApplication a(argc, argv);
 
-    std::shared_ptr<Student::GameBoard> gameBoard
-            = std::shared_ptr<Student::GameBoard>(new Student::GameBoard());
-    std::shared_ptr<Student::GameState> gameState
-            = std::shared_ptr<Student::GameState>(new Student::GameState());
+    //std::shared_ptr<Student::GameBoard> gameBoard
+            //= std::shared_ptr<Student::GameBoard>(new Student::GameBoard());
+    //std::shared_ptr<Student::GameState> gameState
+            //= std::shared_ptr<Student::GameState>(new Student::GameState());
     //std::shared_ptr<Logic::GameEngine> gameEngine
             //= std::shared_ptr<Logic::GameEngine>(new Logic::GameEngine(gameBoard, gameState));
 
@@ -36,6 +36,8 @@ int main(int argc, char *argv[])
 
     MainUI w;
     //w.initializeGameRunner(gameRunner);
+
+
     w.show();
 
 

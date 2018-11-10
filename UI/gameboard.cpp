@@ -3,6 +3,7 @@
 
 Student::GameBoard::GameBoard()
     //scene_(new QGraphicsScene)
+
 {
 
 }
@@ -56,7 +57,11 @@ void Student::GameBoard::removeActor(int actorId)
 void Student::GameBoard::addHex(std::shared_ptr<Common::Hex> newHex)
 {
     hexes_container_.push_back(newHex);
-    GraphicHex *graphic_hex = new GraphicHex();
-    //scene_->addItem(graphic_hex);
-
 }
+
+std::vector<std::shared_ptr<Common::Hex> > Student::GameBoard::returnHexesContainer()
+{
+    return hexes_container_;
+}
+
+

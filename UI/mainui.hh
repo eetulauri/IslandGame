@@ -21,9 +21,14 @@ public:
     explicit MainUI(QWidget *parent = 0);
     ~MainUI();
 
+    void drawHex();
+
+
 private:
     Ui::MainUI *ui;
     QGraphicsScene *scene_;
+    std::shared_ptr<Student::GameBoard> gameBoard_;
+    std::shared_ptr<Student::GameState> gameState_;
 
 };
 

@@ -10,6 +10,7 @@
 #include "igameboard.hh"
 #include "graphichex.hh"
 
+
 namespace Student {
 
 
@@ -34,6 +35,7 @@ public:
 
     void addHex(std::shared_ptr<Common::Hex> newHex);
 
+    std::vector<std::shared_ptr<Common::Hex>> returnHexesContainer();
 
 private:
 
