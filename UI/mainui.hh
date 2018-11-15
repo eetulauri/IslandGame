@@ -6,6 +6,11 @@
 #include "gamestate.hh"
 #include "gameengine.hh"
 #include "igamerunner.hh"
+#include "cubecoordinate.hh"
+#include "hex.hh"
+#include "igameboard.hh"
+
+#include "iostream"
 
 #include <QMainWindow>
 
@@ -19,18 +24,19 @@ class MainUI : public QMainWindow
 
 public:
     explicit MainUI(std::shared_ptr<Student::GameBoard> gameBoard,
-                    std::shared_ptr<Student::GameState> gameState,
                     QWidget *parent = 0);
     ~MainUI();
 
     void drawHex();
+    QPoint cube_to_axial(Common::CubeCoordinate coord);
+    QPoint axial_to_pixel(QPoint point,int size);
 
 
 private:
     Ui::MainUI *ui;
     QGraphicsScene *scene_;
     std::shared_ptr<Student::GameBoard> gameBoard_;
-    std::shared_ptr<Student::GameState> gameState_;
+    std::shared_ptr<Common::IGameState> gameState_;
 
 };
 

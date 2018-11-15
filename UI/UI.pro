@@ -14,17 +14,16 @@ CONFIG += c++14
 
 
 SOURCES += main.cc \
-    mainwindow.cpp \
     graphichex.cpp \
     gameboard.cpp \
     gamestate.cpp \
-    mainui.cpp
+    mainui.cpp \
+    player.cpp
 
 HEADERS  += \
     gameboard.hh \
     player.hh \
     gamestate.hh \
-    mainwindow.hh \
     graphichex.hh \
     mainui.hh
 

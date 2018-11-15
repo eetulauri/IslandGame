@@ -18,14 +18,23 @@ class GraphicHex : public QGraphicsItem
 public:
     GraphicHex();
 
+    /*
     void paint(QPainter *painter,
                const QStyleOptionGraphicsItem *option,
                QWidget *widget);
+
+    */
+    void paint(QPainter *painter,
+               const QStyleOptionGraphicsItem *option,
+               QWidget *widget);
+
     QRectF boundingRect() const;
+
+    QPolygonF getPolygon();
 
 private:
 
-
+    QPolygonF graphical_hex_;
 };
 
 #endif // GRAPHICHEX_HH
