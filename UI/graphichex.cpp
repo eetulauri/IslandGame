@@ -5,11 +5,18 @@
 GraphicHex::GraphicHex()
 {
     setFlag(ItemIsMovable);
+
 }
 
 void GraphicHex::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    QPolygon hex_points;
+
+}
+
+/*
+void GraphicHex::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    QPolygonF hex_points;
 
     double angle_deg;
     double angle_rad;
@@ -23,17 +30,27 @@ void GraphicHex::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
                              size * sin(angle_rad));
     }
 
-    QPen pen(Qt::black, 1);
+    graphical_hex_ = hex_points;
 
+
+    QPen pen(Qt::black, 1);
+    //scene_->addPolygon(pen, brush, QPolygonF);
     painter->setPen(pen);
     painter->drawPolygon(hex_points);
 
-
 }
+*/
+
+
 
 QRectF GraphicHex::boundingRect() const
 {
     return QRectF(-50, -50, 100, 100);
+}
+
+QPolygonF GraphicHex::getPolygon()
+{
+    return graphical_hex_;
 }
 
 

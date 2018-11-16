@@ -14,16 +14,18 @@ CONFIG += c++14
 
 
 SOURCES += main.cc \
-    mainwindow.cpp \
     graphichex.cpp \
-    gameboard.cpp
+    gameboard.cpp \
+    gamestate.cpp \
+    mainui.cpp \
+    player.cpp
 
 HEADERS  += \
     gameboard.hh \
     player.hh \
     gamestate.hh \
-    mainwindow.hh \
-    graphichex.hh
+    graphichex.hh \
+    mainui.hh
 
 INCLUDEPATH += $$PWD/../GameLogic/Engine
 DEPENDPATH += $$PWD/../GameLogic/Engine
@@ -59,3 +61,6 @@ unix:!macx {
 
 QMAKE_EXTRA_TARGETS += copyfiles
 POST_TARGETDEPS += copyfiles
+
+FORMS += \
+    mainui.ui
