@@ -9,23 +9,32 @@
 #include <QPolygon>
 #include <QPen>
 #include <QPainter>
+#include <unordered_map>
 
 #define PI 3.14159265
 
 
-class GraphicHex : public QGraphicsItem
+class GraphicHex : public QGraphicsPolygonItem
 {
 public:
-    GraphicHex();
+    GraphicHex(int size, std::string type);
+
 
     void paint(QPainter *painter,
                const QStyleOptionGraphicsItem *option,
                QWidget *widget);
+
     QRectF boundingRect() const;
+
+    QColor color(std::string pieceType);
+
+
 
 private:
 
 
+    int size_;
+    std::string type_;
 };
 
 #endif // GRAPHICHEX_HH
