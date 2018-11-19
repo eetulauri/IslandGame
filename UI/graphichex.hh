@@ -9,6 +9,7 @@
 #include <QPolygon>
 #include <QPen>
 #include <QPainter>
+#include <unordered_map>
 
 #define PI 3.14159265
 
@@ -18,12 +19,7 @@ class GraphicHex : public QGraphicsPolygonItem
 public:
     GraphicHex(int size, std::string type);
 
-    /*
-    void paint(QPainter *painter,
-               const QStyleOptionGraphicsItem *option,
-               QWidget *widget);
 
-    */
     void paint(QPainter *painter,
                const QStyleOptionGraphicsItem *option,
                QWidget *widget);

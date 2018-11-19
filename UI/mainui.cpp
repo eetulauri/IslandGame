@@ -10,7 +10,6 @@ MainUI::MainUI(std::shared_ptr<Student::GameBoard> gameBoard,
 {
 
     ui->setupUi(this);
-    //std::shared_ptr<QGraphicsScene> scene = std::shared_ptr<QGraphicsScene>(new QGraphicsScene());
     QGraphicsScene *scene = new QGraphicsScene;
     ui->graphicsView->setScene(scene);
     scene_ = scene;
@@ -26,18 +25,8 @@ MainUI::~MainUI()
 
 void MainUI::drawHex()
 {
-    /*
-    for (int i = 0; i < 10;i++)
-    {
-        GraphicHex *graphic_hex = new GraphicHex();
-        scene_->addItem(graphic_hex);
-    }
-    */
-
 
     std::vector<std::shared_ptr<Common::Hex>> hexesContainer = gameBoard_->getHexesContainer();
-
-    //std::map<QPoint, std::string> points;
 
     int size = 25;
 
@@ -45,28 +34,11 @@ void MainUI::drawHex()
     {
         Common::CubeCoordinate coord = hex->getCoordinates();
         QPoint axial_coord = cube_to_axial(coord);
-        //points.push_back(axial_coord);
-        //points[axial_coord] = hex->getPieceType();
         GraphicHex *graphicalHex = new GraphicHex(size, hex->getPieceType());
         QPoint pixel_point = axial_to_pixel(axial_coord, size);
         scene_->addItem(graphicalHex);
         graphicalHex->setPos(pixel_point);
-
     }
-
-
-    /*
-    for (std::map<QPoint, std::string>::const_iterator it=points.begin(); it!=points.end(); ++it)
-    {
-
-        GraphicHex *graphicalHex = new GraphicHex(size, it->second);
-        QPoint pixel_point = axial_to_pixel(it->first, size);
-        scene_->addItem(graphicalHex);
-        graphicalHex->setPos(pixel_point);
-    }
-    */
-
-
 
 }
 
