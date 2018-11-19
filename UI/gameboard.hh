@@ -13,6 +13,8 @@
 #include "igameboard.hh"
 #include "graphichex.hh"
 #include "pawn.hh"
+#include "actor.hh"
+#include "transport.hh"
 
 
 namespace Student {
