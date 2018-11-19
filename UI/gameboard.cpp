@@ -64,15 +64,27 @@ std::shared_ptr<Common::Hex> Student::GameBoard::getHex(Common::CubeCoordinate h
 void Student::GameBoard::addPawn(int playerId, int pawnId)
 {
     //Common::Pawn *pawn = new Common::Pawn(playerId, pawnId);
-    std::shared_ptr<Common::Pawn> pawn = std::make_shared<Common::Pawn>(playerId, pawnId);
+    std::shared_ptr<Common::Pawn> pawn = std::make_shared<Common::Pawn>();
+    pawn->setId(pawnId, playerId);
     pawns_.push_back(pawn);
 }
 
 void Student::GameBoard::addPawn(int playerId, int pawnId, Common::CubeCoordinate coord)
 {
-    //Common::Pawn *pawn = new Common::Pawn(playerId, pawnId, coord);
-    std::shared_ptr<Common::Pawn> pawn = std::make_shared<Common::Pawn>(playerId, pawnId, coord);
+    std::shared_ptr<Common::Pawn> pawn = std::make_shared<Common::Pawn>();
+    pawn->setId(playerId, pawnId);
+    pawn->setCoordinates(coord);
     pawns_.push_back(pawn);
+
+    for (std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>>::const_iterator it =hexesMap_.begin(); it!=hexesMap_.end(); ++it)
+    {
+        Common::CubeCoordinate hexCoord = it->first;
+        if (hexCoord == coord)
+        {
+            it->second->addPawn(pawn);
+        }
+    }
+
 }
 
 void Student::GameBoard::movePawn(int pawnId, Common::CubeCoordinate pawnCoord)
@@ -88,17 +100,22 @@ void Student::GameBoard::movePawn(int pawnId, Common::CubeCoordinate pawnCoord)
 
 void Student::GameBoard::removePawn(int pawnId)
 {
-    for (auto &pawn : pawns_)
-    {
-        if (pawn->getId() == pawnId)
-        {
-            // TO DO:
 
-            //might also need to remove pawn from pawns_ (????)
-            //pawns_._M_erase(pawn);
-            delete &pawn;
+    for (std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>>::const_iterator it =hexesMap_.begin(); it!=hexesMap_.end(); ++it)
+    {
+        std::vector<std::shared_ptr<Common::Pawn> > pawns = it->second->getPawns();
+        for (auto &pawn : pawns)
+        {
+            if (pawn->getId() == pawnId)
+            {
+                it->second->removePawn(pawn);
+                // TO DO:
+
+                //might also need to remove pawn from pawns_ (????)
+            }
         }
     }
+
 
 }
 

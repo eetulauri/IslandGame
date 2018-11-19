@@ -7,6 +7,8 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <string>
+#include <memory>
+#include <iostream>
 
 #include "igameboard.hh"
 #include "graphichex.hh"
