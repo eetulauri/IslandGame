@@ -10,7 +10,6 @@ MainUI::MainUI(std::shared_ptr<Student::GameBoard> gameBoard,
 {
 
     ui->setupUi(this);
-    //std::shared_ptr<QGraphicsScene> scene = std::shared_ptr<QGraphicsScene>(new QGraphicsScene());
     QGraphicsScene *scene = new QGraphicsScene;
     ui->graphicsView->setScene(scene);
     scene_ = scene;
@@ -26,58 +25,20 @@ MainUI::~MainUI()
 
 void MainUI::drawHex()
 {
-    /*
-    for (int i = 0; i < 10;i++)
-    {
-        GraphicHex *graphic_hex = new GraphicHex();
-        scene_->addItem(graphic_hex);
-    }
-    */
 
+    std::vector<std::shared_ptr<Common::Hex>> hexesContainer = gameBoard_->getHexesContainer();
 
-    std::vector<std::shared_ptr<Common::Hex>> hexesContainer = gameBoard_->returnHexesContainer();
-
-    std::vector<QPoint> points;
+    int size = 25;
 
     for (auto hex : hexesContainer)
     {
         Common::CubeCoordinate coord = hex->getCoordinates();
         QPoint axial_coord = cube_to_axial(coord);
-
-        points.push_back(axial_coord);
-        // koodia
-    }
-
-    QPolygonF hex_points;
-
-    double angle_deg;
-    double angle_rad;
-    int size = 25;
-
-    for (int i = 0; i < 6; i++)
-    {
-        angle_deg = 60 * i - 30;
-        angle_rad = PI / 180 * angle_deg;
-        hex_points << QPoint(size * cos(angle_rad),
-                             size * sin(angle_rad));
-    }
-
-
-
-    for (auto point : points)
-    {
-
-
-        QPen pen(Qt::black, 1);
-        QBrush brush;
-        QGraphicsItem *graphicalHex = scene_->addPolygon(hex_points, pen, brush);
-        QPoint pixel_point = axial_to_pixel(point, size);
+        GraphicHex *graphicalHex = new GraphicHex(size, hex->getPieceType());
+        QPoint pixel_point = axial_to_pixel(axial_coord, size);
+        scene_->addItem(graphicalHex);
         graphicalHex->setPos(pixel_point);
     }
-
-
-
-
 
 }
 

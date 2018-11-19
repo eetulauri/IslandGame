@@ -6,6 +6,7 @@
 #include <vector>
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include <string>
 
 #include "igameboard.hh"
 #include "graphichex.hh"
@@ -28,6 +29,7 @@ public:
     bool isWaterTile(Common::CubeCoordinate tileCoord) const;
     std::shared_ptr<Common::Hex> getHex(Common::CubeCoordinate hexCoord) const;
     void addPawn(int playerId, int pawnId);
+    void addPawn(int playerId, int pawnId, Common::CubeCoordinate coord);
     void movePawn(int pawnId, Common::CubeCoordinate pawnCoord);
     void removePawn(int pawnId);
     void addActor(std::shared_ptr<Common::Actor> actor, Common::CubeCoordinate actorCoord);
@@ -39,14 +41,14 @@ public:
     void moveTransport(int id, Common::CubeCoordinate coord);
     void removeTransport(int id);
 
-    std::vector<std::shared_ptr<Common::Hex>> returnHexesContainer();
+    std::vector<std::shared_ptr<Common::Hex>> getHexesContainer();
 
 private:
 
     std::vector<std::shared_ptr<Common::Hex>> hexes_container_;
     std::vector<Common::CubeCoordinate> coordinates_;
+    std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>> hexesMap_;
 
-    //QGraphicsScene *scene_;
 
 };
 }
