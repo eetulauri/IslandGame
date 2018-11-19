@@ -7,9 +7,12 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <string>
+#include <memory>
+#include <iostream>
 
 #include "igameboard.hh"
 #include "graphichex.hh"
+#include "pawn.hh"
 
 
 namespace Student {
@@ -48,6 +51,7 @@ private:
     std::vector<std::shared_ptr<Common::Hex>> hexes_container_;
     std::vector<Common::CubeCoordinate> coordinates_;
     std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>> hexesMap_;
+    std::vector<std::shared_ptr<Common::Pawn>> pawns_;
 
 
 };

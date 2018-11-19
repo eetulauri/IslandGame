@@ -64,27 +64,15 @@ std::shared_ptr<Common::Hex> Student::GameBoard::getHex(Common::CubeCoordinate h
 void Student::GameBoard::addPawn(int playerId, int pawnId)
 {
     //Common::Pawn *pawn = new Common::Pawn(playerId, pawnId);
-    std::shared_ptr<Common::Pawn> pawn = std::make_shared<Common::Pawn>();
-    pawn->setId(pawnId, playerId);
+    std::shared_ptr<Common::Pawn> pawn = std::make_shared<Common::Pawn>(playerId, pawnId);
     pawns_.push_back(pawn);
 }
 
 void Student::GameBoard::addPawn(int playerId, int pawnId, Common::CubeCoordinate coord)
 {
-    std::shared_ptr<Common::Pawn> pawn = std::make_shared<Common::Pawn>();
-    pawn->setId(playerId, pawnId);
-    pawn->setCoordinates(coord);
+    //Common::Pawn *pawn = new Common::Pawn(playerId, pawnId, coord);
+    std::shared_ptr<Common::Pawn> pawn = std::make_shared<Common::Pawn>(playerId, pawnId, coord);
     pawns_.push_back(pawn);
-
-    for (std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>>::const_iterator it =hexesMap_.begin(); it!=hexesMap_.end(); ++it)
-    {
-        Common::CubeCoordinate hexCoord = it->first;
-        if (hexCoord == coord)
-        {
-            it->second->addPawn(pawn);
-        }
-    }
-
 }
 
 void Student::GameBoard::movePawn(int pawnId, Common::CubeCoordinate pawnCoord)
@@ -100,22 +88,17 @@ void Student::GameBoard::movePawn(int pawnId, Common::CubeCoordinate pawnCoord)
 
 void Student::GameBoard::removePawn(int pawnId)
 {
-
-    for (std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>>::const_iterator it =hexesMap_.begin(); it!=hexesMap_.end(); ++it)
+    for (auto &pawn : pawns_)
     {
-        std::vector<std::shared_ptr<Common::Pawn> > pawns = it->second->getPawns();
-        for (auto &pawn : pawns)
+        if (pawn->getId() == pawnId)
         {
-            if (pawn->getId() == pawnId)
-            {
-                it->second->removePawn(pawn);
-                // TO DO:
+            // TO DO:
 
-                //might also need to remove pawn from pawns_ (????)
-            }
+            //might also need to remove pawn from pawns_ (????)
+            
+            delete &pawn;
         }
     }
-
 
 }
 
