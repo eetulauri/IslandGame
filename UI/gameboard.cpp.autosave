@@ -95,7 +95,7 @@ void Student::GameBoard::removePawn(int pawnId)
             // TO DO:
 
             //might also need to remove pawn from pawns_ (????)
-            //pawns_._M_erase(pawn);
+            
             delete &pawn;
         }
     }
