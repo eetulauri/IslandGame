@@ -13,10 +13,10 @@
 #define PI 3.14159265
 
 
-class GraphicHex : public QGraphicsItem
+class GraphicHex : public QGraphicsPolygonItem
 {
 public:
-    GraphicHex();
+    GraphicHex(int size, std::string type);
 
     /*
     void paint(QPainter *painter,
@@ -30,11 +30,15 @@ public:
 
     QRectF boundingRect() const;
 
-    QPolygonF getPolygon();
+    QColor color(std::string pieceType);
+
+
 
 private:
 
-    QPolygonF graphical_hex_;
+
+    int size_;
+    std::string type_;
 };
 
 #endif // GRAPHICHEX_HH

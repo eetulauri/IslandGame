@@ -13,6 +13,9 @@
 #include "iostream"
 
 #include <QMainWindow>
+#include <unordered_map>
+#include <string>
+
 
 namespace Ui {
 class MainUI;
