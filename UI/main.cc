@@ -38,12 +38,14 @@ int main(int argc, char *argv[])
 
     std::shared_ptr<Student::GameBoard> gameBoard = std::make_shared<Student::GameBoard>();
     //std::shared_ptr<Common::IGameState> gameState = std::make_shared<Student::GameState>();
-    std::shared_ptr<Common::IPlayer> player1 = std::make_shared<Student::Player>();
-
-
 
     std::vector<std::shared_ptr<Common::IPlayer>> playerVector;
-    playerVector.push_back(player1);
+
+    for( int a = 1; a < 6; a = a + 1 ){
+        std::shared_ptr<Common::IPlayer> player1 = std::make_shared<Student::Player>(a);
+        playerVector.push_back(player1);
+    }
+
 
     //std::shared_ptr<Logic::GameEngine> gameEngine
       //      = std::shared_ptr<Logic::GameEngine>(new Logic::GameEngine(gameBoard, gameState, playerVector));

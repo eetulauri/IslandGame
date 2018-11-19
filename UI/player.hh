@@ -10,12 +10,17 @@ namespace Student {
 class Player : public Common::IPlayer
 {
 public:
-    Player();
+    Player(int id);
     ~Player();
 
     int getPlayerId() const;
     void setActionsLeft(unsigned int actionsLeft);
     unsigned int getActionsLeft() const;
+
+
+private:
+    int playerId_;
+    int actionsLeft_;
 
 };
 }
