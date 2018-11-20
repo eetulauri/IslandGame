@@ -28,14 +28,14 @@ void MainUI::drawHex()
 
     std::vector<std::shared_ptr<Common::Hex>> hexesContainer = gameBoard_->getHexesContainer();
 
-    int size = 25;
+    int size = 28;
 
     for (auto hex : hexesContainer)
     {
         Common::CubeCoordinate coord = hex->getCoordinates();
         QPoint axial_coord = cube_to_axial(coord);
         GraphicHex *graphicalHex = new GraphicHex(size, hex->getPieceType());
-        QPoint pixel_point = axial_to_pixel(axial_coord, size);
+        QPointF pixel_point = axial_to_pixel(axial_coord, size);
         scene_->addItem(graphicalHex);
         graphicalHex->setPos(pixel_point);
     }
@@ -49,9 +49,9 @@ QPoint MainUI::cube_to_axial(Common::CubeCoordinate coord)
     return QPoint(q, r);
 }
 
-QPoint MainUI::axial_to_pixel(QPoint point, int size)
+QPointF MainUI::axial_to_pixel(QPoint point, int size)
 {
-    float x = size * (sqrt(3) * point.x() + sqrt(3)/2 * point.y());
-    float y = size * (3./2 * point.y());
-    return QPoint(x, y);
+    double x = size * (sqrt(3) * point.x() + sqrt(3)/2 * point.y());
+    double y = size * (3./2 * point.y());
+    return QPointF(x, y);
 }

@@ -7,6 +7,7 @@ GraphicHex::GraphicHex(int size, std::string type) :
     type_(type)
 {
     setFlag(ItemIsMovable);
+    setFlag(ItemIsSelectable);
 
 }
 
@@ -28,13 +29,17 @@ void GraphicHex::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
                              size_ * sin(angle_rad));
     }
 
-    QPen pen(Qt::black, 2);
+    //QPainterPath path;
+    //path.addPolygon(hex_points);
+
+    QPen pen(Qt::black, 0);
     QBrush brush;
     brush.setStyle(Qt::SolidPattern);
     brush.setColor(color(type_));
     painter->setPen(pen);
     painter->setBrush(brush);
     painter->drawPolygon(hex_points);
+    //painter->drawPath(path);
 
 
 }
@@ -53,9 +58,9 @@ QColor GraphicHex::color(std::string pieceType)
                                                         {"Mountain", Qt::gray},
                                                         {"Forest", Qt::green},
                                                         {"Beach", Qt::yellow},
-                                                        {"Water", QColor(38, 82, 202)},
+                                                        {"Water", QColor(0, 119, 190)},
                                                         {"Coral", Qt::darkMagenta}};
-    QColor color;
+
     for (auto &type : colorMap)
     {
         if (type.first == pieceType)

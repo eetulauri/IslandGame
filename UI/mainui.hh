@@ -32,7 +32,7 @@ public:
 
     void drawHex();
     QPoint cube_to_axial(Common::CubeCoordinate coord);
-    QPoint axial_to_pixel(QPoint point,int size);
+    QPointF axial_to_pixel(QPoint point,int size);
 
 
 private:
