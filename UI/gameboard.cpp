@@ -75,6 +75,7 @@ void Student::GameBoard::addPawn(int playerId, int pawnId, Common::CubeCoordinat
     pawn->setId(playerId, pawnId);
     pawn->setCoordinates(coord);
     pawns_.push_back(pawn);
+    pawnMap_[pawnId] = pawn;
 
     for (std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>>::const_iterator it =hexesMap_.begin(); it!=hexesMap_.end(); ++it)
     {
@@ -121,6 +122,8 @@ void Student::GameBoard::removePawn(int pawnId)
 
 void Student::GameBoard::addActor(std::shared_ptr<Common::Actor> actor, Common::CubeCoordinate actorCoord)
 {
+
+    actorMap_[actor->getId()] = actor;
     for (std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>>::const_iterator it =hexesMap_.begin(); it!=hexesMap_.end(); ++it)
     {
         Common::CubeCoordinate hexCoord = it->first;
@@ -140,7 +143,15 @@ void Student::GameBoard::moveActor(int actorId, Common::CubeCoordinate actorCoor
         Common::CubeCoordinate hexCoord = it->first;
         if (hexCoord == actorCoord)
         {
-            std::shared_ptr<Common::Actor> actor = it->second->giveActor(actorId);
+            std::shared_ptr<Common::Actor> actor;
+            //std::shared_ptr<Common::Actor> actor = it->second->giveActor(actorId);
+            for (auto &actorid : actorMap_)
+            {
+                if (actorid.first == actorId)
+                {
+                    actor = actorid.second;
+                }
+            }
             actor->move(it->second);
         }
     }
@@ -174,6 +185,8 @@ void Student::GameBoard::addHex(std::shared_ptr<Common::Hex> newHex)
 
 void Student::GameBoard::addTransport(std::shared_ptr<Common::Transport> transport, Common::CubeCoordinate coord)
 {
+
+    transportMap_[transport->getId()] = transport;
     for (std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>>::const_iterator it =hexesMap_.begin(); it!=hexesMap_.end(); ++it)
     {
         Common::CubeCoordinate hexCoord = it->first;
@@ -194,8 +207,18 @@ void Student::GameBoard::moveTransport(int id, Common::CubeCoordinate coord)
         Common::CubeCoordinate hexCoord = it->first;
         if (hexCoord == coord)
         {
-            std::shared_ptr<Common::Transport> transport = it->second->giveTransport(id);
+            std::shared_ptr<Common::Transport> transport;
+            //std::shared_ptr<Common::Transport> transport = it->second->giveTransport(id);
+            for (auto &transportId : transportMap_)
+            {
+                if (transportId.first == id)
+                {
+                    transport = transportId.second;
+                }
+
+            }
             transport->move(it->second);
+
         }
     }
 
@@ -211,6 +234,7 @@ void Student::GameBoard::removeTransport(int id)
             if (transport->getId() == id)
             {
                 it->second->removeTransport(transport);
+                return;
             }
         }
     }
