@@ -8,7 +8,7 @@ GraphicHex::GraphicHex(int size, std::string type) :
 {
     setFlag(ItemIsMovable);
     setFlag(ItemIsSelectable);
-
+    setAcceptHoverEvents(true);
 }
 
 
@@ -59,7 +59,7 @@ QColor GraphicHex::color(std::string pieceType)
                                                         {"Forest", Qt::green},
                                                         {"Beach", Qt::yellow},
                                                         {"Water", QColor(0, 119, 190)},
-                                                        {"Coral", Qt::darkMagenta}};
+                                                        {"Coral", Qt::magenta}};
 
     for (auto &type : colorMap)
     {

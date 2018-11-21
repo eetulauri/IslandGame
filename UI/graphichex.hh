@@ -11,6 +11,7 @@
 #include <QPainter>
 #include <unordered_map>
 
+
 #define PI 3.14159265
 
 
@@ -27,7 +28,6 @@ public:
     QRectF boundingRect() const;
 
     QColor color(std::string pieceType);
-
 
 
 private:
