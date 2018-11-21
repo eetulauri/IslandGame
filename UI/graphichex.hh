@@ -41,12 +41,11 @@ private:
     int size_;
     std::string type_;
     QPointF pixelPoint_;
-<<<<<<< HEAD
-=======
+
     bool clicked_;
     QPen pen;
     QBrush brush;
->>>>>>> master
+
 };
 
 #endif // GRAPHICHEX_HH

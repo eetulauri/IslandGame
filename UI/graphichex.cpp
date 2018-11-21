@@ -6,10 +6,7 @@ GraphicHex::GraphicHex(int size, std::string type, QPointF pixelPoint) :
     size_(size),
     type_(type),
     pixelPoint_(pixelPoint)
-<<<<<<< HEAD
-=======
 
->>>>>>> master
 {
     setFlag(ItemIsSelectable);
 
