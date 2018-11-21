@@ -15,6 +15,8 @@
 #include <QMainWindow>
 #include <unordered_map>
 #include <string>
+#include <QtCore>
+#include <QtGui>
 
 
 namespace Ui {
@@ -40,6 +42,7 @@ private:
     QGraphicsScene *scene_;
     std::shared_ptr<Student::GameBoard> gameBoard_;
     std::shared_ptr<Common::IGameState> gameState_;
+    QGraphicsPolygonItem *polygon_;
 
 };
 
