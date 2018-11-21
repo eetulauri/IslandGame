@@ -16,6 +16,9 @@ public:
     void changeGamePhase(Common::GamePhase nextPhase);
     void changePlayerTurn(int nextPlayer);
 
+private:
+    int currentPlayer_ = 1;
+    Common::GamePhase current_;
 
 
 };
