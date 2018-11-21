@@ -34,12 +34,10 @@ void MainUI::drawHex()
     {
         Common::CubeCoordinate coord = hex->getCoordinates();
         QPoint axial_coord = cube_to_axial(coord);
+        GraphicHex *graphicalHex = new GraphicHex(size, hex->getPieceType());
         QPointF pixel_point = axial_to_pixel(axial_coord, size);
-        GraphicHex *graphicalHex = new GraphicHex(size, hex->getPieceType(), pixel_point);
-
         scene_->addItem(graphicalHex);
-        //graphicalHex->setPos(pixel_point);
-
+        graphicalHex->setPos(pixel_point);
     }
 
 }
@@ -57,4 +55,3 @@ QPointF MainUI::axial_to_pixel(QPoint point, int size)
     double y = size * (3./2 * point.y());
     return QPointF(x, y);
 }
-

@@ -2,15 +2,12 @@
 
 
 
-GraphicHex::GraphicHex(int size, std::string type, QPointF pixelPoints) :
+GraphicHex::GraphicHex(int size, std::string type) :
     size_(size),
-    type_(type),
-    pixelPoints_(pixelPoints)
+    type_(type)
 {
-    setFlag(ItemIsSelectable);
     setFlag(ItemIsMovable);
-
-    pressed_ = false;
+    setFlag(ItemIsSelectable);
 
 }
 
@@ -18,8 +15,7 @@ GraphicHex::GraphicHex(int size, std::string type, QPointF pixelPoints) :
 
 void GraphicHex::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-
-    QPolygonF hex_points = hex_po;
+    QPolygonF hex_points;
     painter->setRenderHint(QPainter::Antialiasing);
 
     double angle_deg;
@@ -43,7 +39,6 @@ void GraphicHex::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     painter->setPen(pen);
     painter->setBrush(brush);
     painter->drawPolygon(hex_points);
-    setPos(pixelPoints_);
     //painter->drawPath(path);
 
 
@@ -76,37 +71,6 @@ QColor GraphicHex::color(std::string pieceType)
 
     return Qt::cyan;
 
-}
-
-void GraphicHex::paintOnClick(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    QRectF polygon = boundingRect();
-    QBrush brush(Qt::blue);
-
-    if(pressed_)
-    {
-        brush.setColor(Qt::red);
-    }
-    else
-    {
-        brush.setColor(Qt::green);
-    }
-    painter->fillRect(polygon,brush);
-    painter->drawRect(polygon);
-}
-
-void GraphicHex::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    pressed_ = true;
-    update();
-    QGraphicsItem::mousePressEvent(event);
-}
-
-void GraphicHex::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-    pressed_ = false;
-    update();
-    QGraphicsItem::mousePressEvent(event);
 }
 
 

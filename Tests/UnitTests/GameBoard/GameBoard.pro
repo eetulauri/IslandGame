@@ -6,7 +6,7 @@
 
 QT       += testlib
 
-QT       -= gui
+QT       += gui widgets
 
 TARGET = tst_gameboardtest
 CONFIG   += console
