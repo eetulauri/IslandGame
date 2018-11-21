@@ -2,9 +2,10 @@
 
 
 
-GraphicHex::GraphicHex(int size, std::string type) :
+GraphicHex::GraphicHex(int size, std::string type, QPointF pixelPoint) :
     size_(size),
-    type_(type)
+    type_(type),
+    pixelPoint_(pixelPoint)
 {
     setFlag(ItemIsMovable);
     setFlag(ItemIsSelectable);
@@ -39,6 +40,7 @@ void GraphicHex::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     painter->setPen(pen);
     painter->setBrush(brush);
     painter->drawPolygon(hex_points);
+    setPos(pixelPoint_);
     //painter->drawPath(path);
 
 

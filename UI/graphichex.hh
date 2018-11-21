@@ -18,7 +18,7 @@
 class GraphicHex : public QGraphicsPolygonItem
 {
 public:
-    GraphicHex(int size, std::string type);
+    GraphicHex(int size, std::string type, QPointF pixelPoint);
 
 
     void paint(QPainter *painter,
@@ -35,6 +35,7 @@ private:
 
     int size_;
     std::string type_;
+    QPointF pixelPoint_;
 };
 
 #endif // GRAPHICHEX_HH

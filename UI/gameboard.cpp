@@ -78,6 +78,7 @@ void Student::GameBoard::addPawn(int playerId, int pawnId)
     std::shared_ptr<Common::Pawn> pawn = std::make_shared<Common::Pawn>();
     pawn->setId(pawnId, playerId);
     pawns_.push_back(pawn);
+    pawnMap_[pawnId] = pawn;
 }
 
 void Student::GameBoard::addPawn(int playerId, int pawnId, Common::CubeCoordinate coord)
@@ -88,18 +89,9 @@ void Student::GameBoard::addPawn(int playerId, int pawnId, Common::CubeCoordinat
     pawns_.push_back(pawn);
     pawnMap_[pawnId] = pawn;
 
-    /*
-    for (std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>>::const_iterator it =hexesMap_.begin(); it!=hexesMap_.end(); ++it)
-    {
-        Common::CubeCoordinate hexCoord = it->first;
-        if (hexCoord == coord)
-        {
-            it->second->addPawn(pawn);
-        }
-    }
-    */
     std::shared_ptr<Common::Hex> hex = getHex(coord);
     hex->addPawn(pawn);
+    hexes_container_;
 
 }
 
@@ -150,7 +142,7 @@ void Student::GameBoard::movePawn(int pawnId, Common::CubeCoordinate pawnCoord)
 
     if (newHex != nullptr)
     {
-        for (auto &element : pawnMap_)
+        for (const auto &element : pawnMap_)
         {
             if (element.first == pawnId)
             {
@@ -196,7 +188,7 @@ void Student::GameBoard::removePawn(int pawnId)
         }
     }
     */
-    for (auto &element : pawnMap_)
+    for (const auto &element : pawnMap_)
     {
         if (element.first == pawnId)
         {
