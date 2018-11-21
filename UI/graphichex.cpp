@@ -18,6 +18,7 @@ GraphicHex::GraphicHex(int size, std::string type, QPointF pixelPoint) :
 void GraphicHex::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     QPolygonF hex_points;
+
     painter->setRenderHint(QPainter::Antialiasing);
 
     double angle_deg;
@@ -30,6 +31,7 @@ void GraphicHex::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
         hex_points << QPoint(size_ * cos(angle_rad),
                              size_ * sin(angle_rad));
     }
+    hexPoints_ = hex_points;
 
     //QPainterPath path;
     //path.addPolygon(hex_points);
@@ -50,7 +52,14 @@ void GraphicHex::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
 
 QRectF GraphicHex::boundingRect() const
 {
-    return QRectF(-28, -28, 100, 100);
+    return QRectF(-28, -28, 56, 56);
+}
+
+QPainterPath GraphicHex::shape() const
+{
+    QPainterPath path;
+    path.addPolygon(hexPoints_);
+    return path;
 }
 
 QColor GraphicHex::color(std::string pieceType)

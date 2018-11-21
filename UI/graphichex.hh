@@ -28,6 +28,8 @@ public:
 
     QRectF boundingRect() const;
 
+    QPainterPath shape() const;
+
     QColor color(std::string pieceType);
 
 protected:
@@ -41,6 +43,7 @@ private:
     int size_;
     std::string type_;
     QPointF pixelPoint_;
+    QPolygonF hexPoints_;
 
     bool clicked_;
     QPen pen;
