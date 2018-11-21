@@ -35,6 +35,7 @@ public:
     QPointF axial_to_pixel(QPoint point,int size);
 
 
+
 private:
     Ui::MainUI *ui;
     QGraphicsScene *scene_;

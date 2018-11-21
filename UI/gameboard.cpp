@@ -13,6 +13,7 @@ Student::GameBoard::~GameBoard()
 
 int Student::GameBoard::checkTileOccupation(Common::CubeCoordinate tileCoord) const
 {
+    /*
     for (std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>>::const_iterator it =hexesMap_.begin(); it!=hexesMap_.end(); ++it)
     {
         Common::CubeCoordinate coord = it->first;
@@ -24,6 +25,16 @@ int Student::GameBoard::checkTileOccupation(Common::CubeCoordinate tileCoord) co
     }
     int noPawns = -1;
     return noPawns;
+    */
+
+    std::shared_ptr<Common::Hex> hex = getHex(tileCoord);
+    if (hex == nullptr) {
+        return -1;
+    } else {
+        return hex->getPawnAmount();
+    }
+
+
 }
 
 bool Student::GameBoard::isWaterTile(Common::CubeCoordinate tileCoord) const
@@ -77,6 +88,7 @@ void Student::GameBoard::addPawn(int playerId, int pawnId, Common::CubeCoordinat
     pawns_.push_back(pawn);
     pawnMap_[pawnId] = pawn;
 
+    /*
     for (std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>>::const_iterator it =hexesMap_.begin(); it!=hexesMap_.end(); ++it)
     {
         Common::CubeCoordinate hexCoord = it->first;
@@ -85,23 +97,77 @@ void Student::GameBoard::addPawn(int playerId, int pawnId, Common::CubeCoordinat
             it->second->addPawn(pawn);
         }
     }
+    */
+    std::shared_ptr<Common::Hex> hex = getHex(coord);
+    hex->addPawn(pawn);
 
 }
 
 void Student::GameBoard::movePawn(int pawnId, Common::CubeCoordinate pawnCoord)
 {
+    /*
+    std::shared_ptr<Common::Pawn> pawn2;
     for (auto &pawn : pawns_)
     {
         if (pawn->getId() == pawnId)
         {
             pawn->setCoordinates(pawnCoord);
+            pawn2 = pawn;
+
         }
     }
+
+    for (std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>>::const_iterator it =hexesMap_.begin(); it!=hexesMap_.end(); ++it)
+    {
+        Common::CubeCoordinate hexCoord = it->first;
+        if (hexCoord == pawnCoord)
+        {
+            it->second->addPawn(pawn2);
+        }
+    }
+
+    for (std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>>::const_iterator it =hexesMap_.begin(); it!=hexesMap_.end(); ++it)
+    {
+        Common::CubeCoordinate hexCoord = it->first;
+        if (hexCoord == pawnCoord)
+        {
+            std::shared_ptr<Common::Pawn> pawn2;
+            //std::shared_ptr<Common::Transport> transport = it->second->giveTransport(id);
+            for (auto &pawn : pawnMap_)
+            {
+                if (pawn.first == pawnId)
+                {
+                    pawn2 = pawn.second;
+                }
+
+            }
+            it->second->addPawn(pawn2);
+
+        }
+    }
+    */
+    std::shared_ptr<Common::Hex> newHex = getHex(pawnCoord);
+
+    if (newHex != nullptr)
+    {
+        for (auto &element : pawnMap_)
+        {
+            if (element.first == pawnId)
+            {
+                std::shared_ptr<Common::Pawn> pawn = element.second;
+                std::shared_ptr<Common::Hex> oldHex = getHex(pawn->getCoordinates());
+                oldHex->removePawn(pawn);
+                newHex->addPawn(pawn);
+                pawn->setCoordinates(pawnCoord);
+            }
+        }
+    }
+
 }
 
 void Student::GameBoard::removePawn(int pawnId)
 {
-
+    /*
     for (std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>>::const_iterator it =hexesMap_.begin(); it!=hexesMap_.end(); ++it)
     {
         std::vector<std::shared_ptr<Common::Pawn> > pawns = it->second->getPawns();
@@ -116,6 +182,36 @@ void Student::GameBoard::removePawn(int pawnId)
             }
         }
     }
+
+
+    for (std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>>::const_iterator it =hexesMap_.begin(); it!=hexesMap_.end(); ++it)
+    {
+        std::vector<std::shared_ptr<Common::Pawn> > pawns = it->second->getPawns();
+        for (auto &pawn : pawns)
+        {
+            if (pawn->getId() == pawnId)
+            {
+                it->second->removePawn(pawn);
+            }
+        }
+    }
+    */
+    for (auto &element : pawnMap_)
+    {
+        if (element.first == pawnId)
+        {
+            std::shared_ptr<Common::Pawn> pawn = element.second;
+            std::shared_ptr<Common::Hex> hex = getHex(pawn->getCoordinates());
+            if (hex != nullptr)
+            {
+                hex->removePawn(pawn);
+            }
+            pawnMap_.erase(pawnId);
+            return;
+
+        }
+    }
+
 
 
 }
