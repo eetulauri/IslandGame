@@ -55,3 +55,5 @@ QPointF MainUI::axial_to_pixel(QPoint point, int size)
     double y = size * (3./2 * point.y());
     return QPointF(x, y);
 }
+
+
