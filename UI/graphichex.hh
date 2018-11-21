@@ -10,15 +10,16 @@
 #include <QPen>
 #include <QPainter>
 #include <unordered_map>
+#include <QDebug>
 
 
 #define PI 3.14159265
 
 
-class GraphicHex : public QGraphicsPolygonItem
+class GraphicHex : public QGraphicsItem
 {
 public:
-    GraphicHex(int size, std::string type);
+    GraphicHex(int size, std::string type, QPointF pixelPoint);
 
 
     void paint(QPainter *painter,
@@ -29,12 +30,20 @@ public:
 
     QColor color(std::string pieceType);
 
+protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+
 
 private:
 
 
     int size_;
     std::string type_;
+    QPointF pixelPoint_;
+    bool clicked_;
+    QPen pen;
+    QBrush brush;
 };
 
 #endif // GRAPHICHEX_HH

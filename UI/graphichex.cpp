@@ -2,13 +2,15 @@
 
 
 
-GraphicHex::GraphicHex(int size, std::string type) :
+GraphicHex::GraphicHex(int size, std::string type, QPointF pixelPoint) :
     size_(size),
-    type_(type)
+    type_(type),
+    pixelPoint_(pixelPoint)
+
 {
-    setFlag(ItemIsMovable);
     setFlag(ItemIsSelectable);
-    setAcceptHoverEvents(true);
+
+    clicked_ = false;
 }
 
 
@@ -32,13 +34,12 @@ void GraphicHex::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     //QPainterPath path;
     //path.addPolygon(hex_points);
 
-    QPen pen(Qt::black, 0);
-    QBrush brush;
     brush.setStyle(Qt::SolidPattern);
     brush.setColor(color(type_));
     painter->setPen(pen);
     painter->setBrush(brush);
     painter->drawPolygon(hex_points);
+    setPos(pixelPoint_);
     //painter->drawPath(path);
 
 
@@ -49,7 +50,7 @@ void GraphicHex::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
 
 QRectF GraphicHex::boundingRect() const
 {
-    return QRectF(-50, -50, 100, 100);
+    return QRectF(-28, -28, 100, 100);
 }
 
 QColor GraphicHex::color(std::string pieceType)
@@ -61,16 +62,41 @@ QColor GraphicHex::color(std::string pieceType)
                                                         {"Water", QColor(0, 119, 190)},
                                                         {"Coral", Qt::magenta}};
 
-    for (auto &type : colorMap)
+    if(clicked_ == true)
     {
-        if (type.first == pieceType)
+        return Qt::cyan;
+    }
+    else
+    {
+        for (auto &type : colorMap)
         {
-            return type.second;
+            if (type.first == pieceType)
+            {
+                return type.second;
+            }
         }
+
+        return Qt::cyan;
     }
 
-    return Qt::cyan;
+}
 
+void GraphicHex::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    QPen pen(Qt::red);
+    QBrush brush(Qt::red);
+    clicked_ = true;
+    update();
+    QGraphicsItem::mousePressEvent(event);
+
+
+}
+
+void GraphicHex::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    clicked_ = false;
+    update();
+    QGraphicsItem::mousePressEvent(event);
 }
 
 

@@ -19,6 +19,8 @@ public:
 private:
     int currentPlayer_ = 1;
     Common::GamePhase current_;
+
+
 };
 }
 
