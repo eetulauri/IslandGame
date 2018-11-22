@@ -14,6 +14,7 @@ MainUI::MainUI(std::shared_ptr<Student::GameBoard> gameBoard,
     ui->graphicsView->setScene(scene);
     scene_ = scene;
 
+
     drawHex();
 }
 
@@ -36,7 +37,6 @@ void MainUI::drawHex()
         QPoint axial_coord = cube_to_axial(coord);
         QPointF pixel_point = axial_to_pixel(axial_coord, size);
         GraphicHex *graphicalHex = new GraphicHex(size, hex->getPieceType(), pixel_point);
-
         scene_->addItem(graphicalHex);
         //graphicalHex->setPos(pixel_point);
     }
