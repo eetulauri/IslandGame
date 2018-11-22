@@ -240,7 +240,7 @@ void Student::GameBoard::createPawns()
 {
     std::vector<Common::CubeCoordinate> cornerPieces = calculateCornerPieces();
 
-    for (int i = 1; i < players_.size(); i++) {
+    for (long unsigned int i = 1; i < players_.size()+1; i++) {
         addPawn(i, i, cornerPieces.at(i-1));
     }
 

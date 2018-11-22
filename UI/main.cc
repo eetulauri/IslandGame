@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 
 
 
-    for( int a = 1; a < 6; a = a + 1 ){
+    for( int a = 1; a < 7; a++){
         std::shared_ptr<Student::Player> player1 = std::make_shared<Student::Player>(a);
         playerVector.push_back(player1);
         gameBoard->addPlayer(player1);
