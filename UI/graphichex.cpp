@@ -63,13 +63,12 @@ void GraphicHex::drawPawn(QPainter *painter)
         painter->setPen(pen);
         painter->setBrush(brush);
         double x = coord_.x;
-        double y = coord_.z;
+        double y = coord_.y;
 
         std::shared_ptr<QRectF> pawnGraphical = std::make_shared<QRectF>();
         pawnGraphical->setCoords(x, y, x ,y);
         pawnGraphical->setWidth(20);
         pawnGraphical->setHeight(20);
-        pawnGraphical->bottom();
         painter->drawRect(*pawnGraphical);
         QString str = "1";
         std::shared_ptr<QGraphicsSimpleTextItem> number = std::make_shared<QGraphicsSimpleTextItem>();
