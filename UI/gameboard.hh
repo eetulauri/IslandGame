@@ -12,6 +12,7 @@
 #include "graphichex.hh"
 #include "actor.hh"
 #include "transport.hh"
+#include "player.hh"
 
 
 
@@ -41,15 +42,19 @@ public:
     void moveTransport(int id, Common::CubeCoordinate coord) override;
     void removeTransport(int id) override;
 
-    std::vector<std::shared_ptr<Common::Hex>> getHexesContainer();
+    void createPawns();
+    void addPlayer(std::shared_ptr<Student::Player> player);
+    std::vector<Common::CubeCoordinate> calculateCornerPieces();
+    std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>> getHexesContainer();
 
 private:
 
-    std::vector<std::shared_ptr<Common::Hex>> hexes_container_;
     std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>> hexesMap_;
     std::unordered_map<int, std::shared_ptr<Common::Pawn>> pawnMap_;
     std::unordered_map<int, std::shared_ptr<Common::Actor>> actorMap_;
     std::unordered_map<int, std::shared_ptr<Common::Transport>> transportMap_;
+    std::vector<std::shared_ptr<Common::IPlayer>> players_;
+
 
 };
 }

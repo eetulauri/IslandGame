@@ -19,12 +19,14 @@
 class GraphicHex : public QGraphicsItem
 {
 public:
-    GraphicHex(int size, std::string type, QPointF pixelPoint);
+    GraphicHex(int size, std::string type, QPointF pixelPoint, std::shared_ptr<Common::Hex> hex, Common::CubeCoordinate coord);
 
 
     void paint(QPainter *painter,
                const QStyleOptionGraphicsItem *option,
                QWidget *widget);
+
+    void drawPawn(QPainter *painter);
 
     QRectF boundingRect() const;
 
@@ -44,6 +46,8 @@ private:
     std::string type_;
     QPointF pixelPoint_;
     QPolygonF hexPoints_;
+    std::shared_ptr<Common::Hex> hex_;
+    Common::CubeCoordinate coord_;
 
     bool clicked_;
     QPen pen;

@@ -2,10 +2,13 @@
 
 
 
-GraphicHex::GraphicHex(int size, std::string type, QPointF pixelPoint) :
+GraphicHex::GraphicHex(int size, std::string type, QPointF pixelPoint,
+                       std::shared_ptr<Common::Hex> hex, Common::CubeCoordinate coord) :
     size_(size),
     type_(type),
-    pixelPoint_(pixelPoint)
+    pixelPoint_(pixelPoint),
+    hex_(hex),
+    coord_(coord)
 
 {
     setFlag(ItemIsSelectable);
@@ -42,11 +45,32 @@ void GraphicHex::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     painter->setBrush(brush);
     painter->drawPolygon(hex_points);
     setPos(pixelPoint_);
+    drawPawn(painter);
     //painter->drawPath(path);
 
 
 }
 
+void GraphicHex::drawPawn(QPainter *painter)
+{
+    std::vector<std::shared_ptr<Common::Pawn> > pawns = hex_->getPawns();
+
+    if (pawns.size() != 0) {
+
+        std::shared_ptr<Common::Pawn> pawn = pawns.at(0);
+        brush.setStyle(Qt::SolidPattern);
+        brush.setColor(Qt::darkMagenta);
+        painter->setPen(pen);
+        painter->setBrush(brush);
+        double x = pixelPoint_.x();
+        double y = pixelPoint_.y();
+        painter->drawRect(x, y, 20, 20);
+
+    }
+
+
+
+}
 
 
 

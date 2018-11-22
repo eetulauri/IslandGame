@@ -21,6 +21,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
 
+
     std::shared_ptr<Student::GameBoard> gameBoard = std::make_shared<Student::GameBoard>();
     std::shared_ptr<Student::GameState> gameState = std::make_shared<Student::GameState>();
 
@@ -31,6 +32,7 @@ int main(int argc, char *argv[])
     for( int a = 1; a < 6; a = a + 1 ){
         std::shared_ptr<Student::Player> player1 = std::make_shared<Student::Player>(a);
         playerVector.push_back(player1);
+        gameBoard->addPlayer(player1);
     }
 
 
@@ -43,7 +45,7 @@ int main(int argc, char *argv[])
     std::shared_ptr<Common::IGameRunner> gameRunner
             = Common::Initialization::getGameRunner(gameBoard, gameState, playerVector);
 
-
+    gameBoard->createPawns();
     MainUI w(gameBoard);
     //w.initializeGameRunner(gameRunner);
 

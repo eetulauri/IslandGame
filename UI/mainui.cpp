@@ -27,16 +27,18 @@ MainUI::~MainUI()
 void MainUI::drawHex()
 {
 
-    std::vector<std::shared_ptr<Common::Hex>> hexesContainer = gameBoard_->getHexesContainer();
+    //std::vector<std::shared_ptr<Common::Hex>> hexesContainer = gameBoard_->getHexesContainer();
+    std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>> hexesMap = gameBoard_->getHexesContainer();
 
     int size = 28;
 
-    for (auto hex : hexesContainer)
+    for (auto element : hexesMap)
     {
+        std::shared_ptr<Common::Hex> hex = element.second;
         Common::CubeCoordinate coord = hex->getCoordinates();
         QPoint axial_coord = cube_to_axial(coord);
         QPointF pixel_point = axial_to_pixel(axial_coord, size);
-        GraphicHex *graphicalHex = new GraphicHex(size, hex->getPieceType(), pixel_point);
+        GraphicHex *graphicalHex = new GraphicHex(size, hex->getPieceType(), pixel_point, element.second, element.first);
         scene_->addItem(graphicalHex);
         //graphicalHex->setPos(pixel_point);
     }

@@ -175,10 +175,8 @@ void Student::GameBoard::removeActor(int actorId)
 
 void Student::GameBoard::addHex(std::shared_ptr<Common::Hex> newHex)
 {
-    hexes_container_.push_back(newHex);
     Common::CubeCoordinate coord = newHex->getCoordinates();
     hexesMap_[coord] = newHex;
-
 }
 
 void Student::GameBoard::addTransport(std::shared_ptr<Common::Transport> transport, Common::CubeCoordinate coord)
@@ -238,9 +236,36 @@ void Student::GameBoard::removeTransport(int id)
 
 }
 
-std::vector<std::shared_ptr<Common::Hex> > Student::GameBoard::getHexesContainer()
+void Student::GameBoard::createPawns()
 {
-    return hexes_container_;
+    std::vector<Common::CubeCoordinate> cornerPieces = calculateCornerPieces();
+
+    for (int i = 1; i < players_.size(); i++) {
+        addPawn(i, i, cornerPieces.at(i-1));
+    }
+
+
+}
+
+void Student::GameBoard::addPlayer(std::shared_ptr<Student::Player> player)
+{
+    players_.push_back(player);
+}
+
+std::vector<Common::CubeCoordinate> Student::GameBoard::calculateCornerPieces()
+{
+    std::vector<Common::CubeCoordinate> cornerPieces;
+    for (auto &element : hexesMap_) {
+        if (element.second->getPieceType() == "Coral" and (element.first.x == 0 or element.first.y == 0 or element.first.z == 0)) {
+            cornerPieces.push_back(element.first);
+        }
+    }
+    return cornerPieces;
+}
+
+std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex> > Student::GameBoard::getHexesContainer()
+{
+    return hexesMap_;
 }
 
 
