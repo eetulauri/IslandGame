@@ -11,6 +11,8 @@
 #include <QPainter>
 #include <unordered_map>
 #include <QDebug>
+#include <QString>
+#include <string>
 
 
 #define PI 3.14159265

@@ -59,14 +59,23 @@ void GraphicHex::drawPawn(QPainter *painter)
 
         std::shared_ptr<Common::Pawn> pawn = pawns.at(0);
         brush.setStyle(Qt::SolidPattern);
-        brush.setColor(Qt::black);
+        brush.setColor(Qt::white);
         painter->setPen(pen);
         painter->setBrush(brush);
-        double x = pixelPoint_.x();
-        double y = pixelPoint_.y();
-        double a = coord_.x;
-        double b = coord_.z;
-        painter->drawRect(a, b, 20, 20);
+        double x = coord_.x;
+        double y = coord_.z;
+
+        std::shared_ptr<QRectF> pawnGraphical = std::make_shared<QRectF>();
+        pawnGraphical->setCoords(x, y, x ,y);
+        pawnGraphical->setWidth(20);
+        pawnGraphical->setHeight(20);
+        pawnGraphical->bottom();
+        painter->drawRect(*pawnGraphical);
+        QString str = "1";
+        std::shared_ptr<QGraphicsSimpleTextItem> number = std::make_shared<QGraphicsSimpleTextItem>();
+        //number->setParentItem(*pawnGraphical);
+        number->setText(str);
+
 
     }
 
