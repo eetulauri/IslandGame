@@ -187,7 +187,14 @@ void GraphicHex::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     QPen pen(Qt::red);
     QBrush brush(Qt::red);
-    clicked_ = true;
+    if (clicked_ == true) {
+        clicked_ = false;
+    } else {
+        clicked_ = true;
+    }
+    emit hexOnClick(hex_);
+
+
     update();
     QGraphicsItem::mousePressEvent(event);
 
@@ -196,7 +203,7 @@ void GraphicHex::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void GraphicHex::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    clicked_ = false;
+
     update();
     QGraphicsItem::mousePressEvent(event);
 }

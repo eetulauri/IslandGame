@@ -1,6 +1,7 @@
 #ifndef GRAPHICHEX_HH
 #define GRAPHICHEX_HH
 
+
 #include <hex.hh>
 #include <math.h>
 #include <QGraphicsItem>
@@ -13,15 +14,19 @@
 #include <QDebug>
 #include <QString>
 #include <string>
+#include <memory>
+
 
 
 #define PI 3.14159265
 
 
-class GraphicHex : public QGraphicsItem
+class GraphicHex : public QObject, public QGraphicsItem
 {
+    Q_OBJECT
 public:
-    GraphicHex(int size, std::string type, QPointF pixelPoint, std::shared_ptr<Common::Hex> hex, Common::CubeCoordinate coord);
+    GraphicHex(int size, std::string type, QPointF pixelPoint,
+               std::shared_ptr<Common::Hex> hex, Common::CubeCoordinate coord);
 
 
     void paint(QPainter *painter,
@@ -38,6 +43,9 @@ public:
 
     QColor color(std::string pieceType);
 
+signals:
+    void hexOnClick(std::shared_ptr<Common::Hex> hex);
+
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
@@ -52,6 +60,7 @@ private:
     QPolygonF hexPoints_;
     std::shared_ptr<Common::Hex> hex_;
     Common::CubeCoordinate coord_;
+
 
     bool clicked_;
     QPen pen;

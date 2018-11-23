@@ -4,7 +4,7 @@
 Student::Player::Player(int id) :
     playerId_(id)
 {
-
+    actionsLeft_ = 100;
 }
 
 Student::Player::~Player()

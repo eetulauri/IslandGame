@@ -15,6 +15,7 @@
 #include <QMainWindow>
 #include <unordered_map>
 #include <string>
+#include <QObject>
 
 
 namespace Ui {
@@ -27,6 +28,7 @@ class MainUI : public QMainWindow
 
 public:
     explicit MainUI(std::shared_ptr<Student::GameBoard> gameBoard,
+                    std::shared_ptr<Common::IGameRunner> gameRunner,
                     QWidget *parent = 0);
     ~MainUI();
 
@@ -35,12 +37,20 @@ public:
     QPointF axial_to_pixel(QPoint point,int size);
 
 
+public slots:
+
+    void givePawnNewCoordinates(std::shared_ptr<Common::Hex> hex);
+
+
 
 private:
     Ui::MainUI *ui;
     QGraphicsScene *scene_;
     std::shared_ptr<Student::GameBoard> gameBoard_;
+    std::shared_ptr<Common::IGameRunner> gameRunner_;
     std::shared_ptr<Common::IGameState> gameState_;
+
+    std::shared_ptr<Common::Hex> selectedHex_;
 
 };
 

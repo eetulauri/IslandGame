@@ -7,6 +7,7 @@
 #include <string>
 #include <memory>
 #include <iostream>
+#include <QObject>
 
 #include "igameboard.hh"
 #include "graphichex.hh"
@@ -44,8 +45,11 @@ public:
 
     void createPawns();
     void addPlayer(std::shared_ptr<Student::Player> player);
+
     std::vector<Common::CubeCoordinate> calculateCornerPieces();
     std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>> getHexesContainer();
+
+
 
 private:
 

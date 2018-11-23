@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
         gameBoard->addPlayer(player1);
     }
 
-
+    gameState->changeGamePhase(Common::GamePhase::MOVEMENT);
     //std::shared_ptr<Logic::GameEngine> gameEngine
       //      = std::shared_ptr<Logic::GameEngine>(new Logic::GameEngine(gameBoard, gameState, playerVector));
 
@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
             = Common::Initialization::getGameRunner(gameBoard, gameState, playerVector);
 
     gameBoard->createPawns();
-    MainUI w(gameBoard);
+    MainUI w(gameBoard, gameRunner);
     //w.initializeGameRunner(gameRunner);
 
 

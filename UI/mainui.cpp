@@ -1,11 +1,12 @@
 #include "mainui.hh"
 #include "ui_mainui.h"
 
-MainUI::MainUI(std::shared_ptr<Student::GameBoard> gameBoard,
+MainUI::MainUI(std::shared_ptr<Student::GameBoard> gameBoard, std::shared_ptr<Common::IGameRunner> gameRunner,
                QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainUI),
-    gameBoard_(gameBoard)
+    gameBoard_(gameBoard),
+    gameRunner_(gameRunner)
     //gameState_(gameState)
 {
 
@@ -40,7 +41,15 @@ void MainUI::drawHex()
         QPointF pixel_point = axial_to_pixel(axial_coord, size);
         GraphicHex *graphicalHex = new GraphicHex(size, hex->getPieceType(), pixel_point, element.second, element.first);
         scene_->addItem(graphicalHex);
-        //graphicalHex->setPos(pixel_point);
+
+        /*
+        QObject::connect(&graphicalHex, SIGNAL(hexOnClick(std::shared_ptr<Common::Hex>)),
+                         this, SLOT(givePawnNewCoordinates(std::shared_ptr<Common::Hex>)));
+                         */
+        QObject::connect(graphicalHex, &GraphicHex::hexOnClick,
+                         this, &MainUI::givePawnNewCoordinates);
+
+
     }
 
 }
@@ -57,6 +66,23 @@ QPointF MainUI::axial_to_pixel(QPoint point, int size)
     double x = size * (sqrt(3) * point.x() + sqrt(3)/2 * point.y());
     double y = size * (3./2 * point.y());
     return QPointF(x, y);
+}
+
+void MainUI::givePawnNewCoordinates(std::shared_ptr<Common::Hex> hex)
+{
+    if (selectedHex_ == nullptr) {
+        selectedHex_ = hex;
+    } else {
+        std::vector<std::shared_ptr<Common::Pawn> > pawns = selectedHex_->getPawns();
+        if (pawns.size() != 0) {
+            std::shared_ptr<Common::Pawn> pawn = pawns.at(0);
+            gameRunner_->movePawn(selectedHex_->getCoordinates(), hex->getCoordinates(), pawn->getId());
+            selectedHex_ = nullptr;
+        }
+
+    }
+
+
 }
 
 
