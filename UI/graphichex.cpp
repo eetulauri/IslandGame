@@ -45,6 +45,8 @@ void GraphicHex::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     painter->setBrush(brush);
     painter->drawPolygon(hex_points);
     setPos(pixelPoint_);
+    drawActor(painter);
+    drawTransport(painter);
     drawPawn(painter);
     //painter->drawPath(path);
 
@@ -80,6 +82,63 @@ void GraphicHex::drawPawn(QPainter *painter)
 
 
 
+}
+
+void GraphicHex::drawTransport(QPainter *painter)
+{
+    std::vector<std::shared_ptr<Common::Transport> > transports = hex_->getTransports();
+
+    if (transports.size() != 0) {
+
+        std::shared_ptr<Common::Transport> transport = transports.at(0);
+        brush.setStyle(Qt::SolidPattern);
+        brush.setColor(Qt::darkRed);
+        painter->setPen(pen);
+        painter->setBrush(brush);
+        double x = coord_.x;
+        double y = coord_.y;
+
+        std::shared_ptr<QRectF> transportGraphical = std::make_shared<QRectF>();
+        transportGraphical->setCoords(x, y, x ,y);
+        transportGraphical->setWidth(20);
+        transportGraphical->setHeight(20);
+        painter->drawRect(*transportGraphical);
+        QString str = "1";
+        std::shared_ptr<QGraphicsSimpleTextItem> number = std::make_shared<QGraphicsSimpleTextItem>();
+        //number->setParentItem(*pawnGraphical);
+        number->setText(str);
+
+
+    }
+}
+
+void GraphicHex::drawActor(QPainter *painter)
+{
+
+    std::vector<std::shared_ptr<Common::Actor> > actors = hex_->getActors();
+
+    if (actors.size() != 0) {
+
+        std::shared_ptr<Common::Actor> actor = actors.at(0);
+        brush.setStyle(Qt::SolidPattern);
+        brush.setColor(Qt::darkGreen);
+        painter->setPen(pen);
+        painter->setBrush(brush);
+        double x = coord_.x;
+        double y = coord_.y;
+
+        std::shared_ptr<QRectF> actorGraphical = std::make_shared<QRectF>();
+        actorGraphical->setCoords(x, y, x ,y);
+        actorGraphical->setWidth(20);
+        actorGraphical->setHeight(20);
+        painter->drawRect(*actorGraphical);
+        QString str = "1";
+        std::shared_ptr<QGraphicsSimpleTextItem> number = std::make_shared<QGraphicsSimpleTextItem>();
+        //number->setParentItem(*pawnGraphical);
+        number->setText(str);
+
+
+    }
 }
 
 

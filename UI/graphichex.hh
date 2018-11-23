@@ -29,6 +29,8 @@ public:
                QWidget *widget);
 
     void drawPawn(QPainter *painter);
+    void drawTransport(QPainter *painter);
+    void drawActor(QPainter *painter);
 
     QRectF boundingRect() const;
 
