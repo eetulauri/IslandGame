@@ -70,16 +70,27 @@ QPointF MainUI::axial_to_pixel(QPoint point, int size)
 
 void MainUI::givePawnNewCoordinates(std::shared_ptr<Common::Hex> hex)
 {
+    try
+    {
     if (selectedHex_ == nullptr) {
         selectedHex_ = hex;
-    } else {
         std::vector<std::shared_ptr<Common::Pawn> > pawns = selectedHex_->getPawns();
         if (pawns.size() != 0) {
-            std::shared_ptr<Common::Pawn> pawn = pawns.at(0);
-            gameRunner_->movePawn(selectedHex_->getCoordinates(), hex->getCoordinates(), pawn->getId());
+            pawn_ = pawns.at(0);
+        } else {
             selectedHex_ = nullptr;
         }
 
+    } else {
+
+        gameRunner_->movePawn(selectedHex_->getCoordinates(), hex->getCoordinates(), pawn_->getId());
+        selectedHex_ = nullptr;
+        pawn_ = nullptr;
+        }
+    }
+    catch(Common::IllegalMoveException &i)
+    {
+        std::cout << i.msg() << std::endl;
     }
 
 

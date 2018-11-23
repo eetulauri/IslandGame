@@ -9,9 +9,10 @@
 #include "cubecoordinate.hh"
 #include "hex.hh"
 #include "igameboard.hh"
+#include "illegalmoveexception.hh"
 
-#include "iostream"
 
+#include <iostream>
 #include <QMainWindow>
 #include <unordered_map>
 #include <string>
@@ -51,6 +52,7 @@ private:
     std::shared_ptr<Common::IGameState> gameState_;
 
     std::shared_ptr<Common::Hex> selectedHex_;
+    std::shared_ptr<Common::Pawn> pawn_;
 
 };
 
