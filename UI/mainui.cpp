@@ -1,13 +1,15 @@
 #include "mainui.hh"
 #include "ui_mainui.h"
 
-MainUI::MainUI(std::shared_ptr<Student::GameBoard> gameBoard, std::shared_ptr<Common::IGameRunner> gameRunner,
+MainUI::MainUI(std::shared_ptr<Student::GameBoard> gameBoard,
+               std::shared_ptr<Common::IGameRunner> gameRunner,
+               std::shared_ptr<Student::GameState> gameState,
                QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainUI),
     gameBoard_(gameBoard),
-    gameRunner_(gameRunner)
-    //gameState_(gameState)
+    gameRunner_(gameRunner),
+    gameState_(gameState)
 {
 
     ui->setupUi(this);
@@ -41,11 +43,8 @@ void MainUI::drawHex()
         QPointF pixel_point = axial_to_pixel(axial_coord, size);
         GraphicHex *graphicalHex = new GraphicHex(size, hex->getPieceType(), pixel_point, element.second, element.first);
         scene_->addItem(graphicalHex);
+        graphicHexesVector_.push_back(graphicalHex);
 
-        /*
-        QObject::connect(&graphicalHex, SIGNAL(hexOnClick(std::shared_ptr<Common::Hex>)),
-                         this, SLOT(givePawnNewCoordinates(std::shared_ptr<Common::Hex>)));
-                         */
         QObject::connect(graphicalHex, &GraphicHex::hexOnClick,
                          this, &MainUI::givePawnNewCoordinates);
 
@@ -70,29 +69,54 @@ QPointF MainUI::axial_to_pixel(QPoint point, int size)
 
 void MainUI::givePawnNewCoordinates(std::shared_ptr<Common::Hex> hex)
 {
-    try
+    Common::GamePhase phase = gameState_->currentGamePhase();
+    int abc = 0;
+    if (gameState_->currentGamePhase() == Common::MOVEMENT)
     {
-    if (selectedHex_ == nullptr) {
-        selectedHex_ = hex;
-        std::vector<std::shared_ptr<Common::Pawn> > pawns = selectedHex_->getPawns();
-        if (pawns.size() != 0) {
-            pawn_ = pawns.at(0);
+        try
+        {
+        if (selectedHex_ == nullptr) {
+            selectedHex_ = hex;
+            std::vector<std::shared_ptr<Common::Pawn> > pawns = selectedHex_->getPawns();
+            if (pawns.size() != 0) {
+                pawn_ = pawns.at(0);
+            } else {
+
+                selectedHex_ = nullptr;
+            }
+
         } else {
+
+            int movesLeft = gameRunner_->movePawn(selectedHex_->getCoordinates(), hex->getCoordinates(), pawn_->getId());
+            for (auto &graphicalHex : graphicHexesVector_) {
+                if (graphicalHex->getHex() == selectedHex_ or graphicalHex->getHex()== hex) {
+                    graphicalHex->resetClicked();
+                }
+            }
+            //gameState_->changeGamePhase(Common::GamePhase::SINKING);
+
             selectedHex_ = nullptr;
-        }
+            pawn_ = nullptr;
 
-    } else {
+            if (movesLeft <= 0) {
+                if (gameState_->currentPlayer() == gameRunner_->playerAmount()) {
+                    gameState_->changeGamePhase(Common::SINKING);
+                } else {
+                    gameState_->changePlayerTurn((gameState_->currentPlayer()+1));
+                }
+            }
 
-        gameRunner_->movePawn(selectedHex_->getCoordinates(), hex->getCoordinates(), pawn_->getId());
-        selectedHex_ = nullptr;
-        pawn_ = nullptr;
+
+            }
         }
-    }
-    catch(Common::IllegalMoveException &i)
+        catch(Common::IllegalMoveException &i)
+        {
+            std::cout << i.msg() << std::endl;
+        }
+    } else if (gameState_->currentGamePhase() == Common::GamePhase::SINKING)
     {
-        std::cout << i.msg() << std::endl;
+        gameRunner_->flipTile(hex->getCoordinates());
     }
-
 
 }
 

@@ -43,6 +43,10 @@ public:
 
     QColor color(std::string pieceType);
 
+    void resetClicked();
+    Common::CubeCoordinate getCoordinates();
+    std::shared_ptr<Common::Hex> getHex();
+
 signals:
     void hexOnClick(std::shared_ptr<Common::Hex> hex);
 

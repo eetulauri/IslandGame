@@ -4,7 +4,8 @@
 
 Student::GameState::GameState()
 {
-
+    current_ = Common::MOVEMENT;
+    currentPlayer_ = 1;
 }
 
 Student::GameState::~GameState()

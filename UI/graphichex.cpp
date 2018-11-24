@@ -183,6 +183,21 @@ QColor GraphicHex::color(std::string pieceType)
 
 }
 
+void GraphicHex::resetClicked()
+{
+    clicked_ = false;
+}
+
+Common::CubeCoordinate GraphicHex::getCoordinates()
+{
+    return coord_;
+}
+
+std::shared_ptr<Common::Hex> GraphicHex::getHex()
+{
+    return hex_;
+}
+
 void GraphicHex::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     QPen pen(Qt::red);

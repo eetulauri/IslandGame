@@ -30,6 +30,7 @@ class MainUI : public QMainWindow
 public:
     explicit MainUI(std::shared_ptr<Student::GameBoard> gameBoard,
                     std::shared_ptr<Common::IGameRunner> gameRunner,
+                    std::shared_ptr<Student::GameState> gameState,
                     QWidget *parent = 0);
     ~MainUI();
 
@@ -53,6 +54,7 @@ private:
 
     std::shared_ptr<Common::Hex> selectedHex_;
     std::shared_ptr<Common::Pawn> pawn_;
+    std::vector<GraphicHex*> graphicHexesVector_;
 
 };
 
