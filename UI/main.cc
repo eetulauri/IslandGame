@@ -27,15 +27,13 @@ int main(int argc, char *argv[])
 
     std::vector<std::shared_ptr<Common::IPlayer>> playerVector;
 
-
-
-    for( int a = 1; a < 2; a++){
+    for( int a = 1; a < 3; a++){
         std::shared_ptr<Student::Player> player1 = std::make_shared<Student::Player>(a);
         playerVector.push_back(player1);
         gameBoard->addPlayer(player1);
     }
 
-    gameState->changeGamePhase(Common::GamePhase::MOVEMENT);
+    //gameState->changeGamePhase(Common::GamePhase::MOVEMENT);
     //std::shared_ptr<Logic::GameEngine> gameEngine
       //      = std::shared_ptr<Logic::GameEngine>(new Logic::GameEngine(gameBoard, gameState, playerVector));
 
@@ -46,7 +44,7 @@ int main(int argc, char *argv[])
             = Common::Initialization::getGameRunner(gameBoard, gameState, playerVector);
 
     gameBoard->createPawns();
-    MainUI w(gameBoard, gameRunner);
+    MainUI w(gameBoard, gameRunner, gameState);
     //w.initializeGameRunner(gameRunner);
 
 
