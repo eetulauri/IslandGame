@@ -17,6 +17,7 @@
 #include <unordered_map>
 #include <string>
 #include <QObject>
+#include <QString>
 
 
 namespace Ui {
@@ -37,6 +38,7 @@ public:
     void drawHex();
     QPoint cube_to_axial(Common::CubeCoordinate coord);
     QPointF axial_to_pixel(QPoint point,int size);
+    GraphicHex* getCorrespondingGraphicHex(std::shared_ptr<Common::Hex> hex);
 
 
 public slots:
