@@ -40,6 +40,13 @@ public:
     QPointF axial_to_pixel(QPoint point,int size);
     GraphicHex* getCorrespondingGraphicHex(std::shared_ptr<Common::Hex> hex);
 
+    void gamePhaseMovement(std::shared_ptr<Common::Hex> hex);
+    void gamePhaseSinking(std::shared_ptr<Common::Hex> hex);
+    void gamePhaseSpinning(std::shared_ptr<Common::Hex> hex);
+
+    void printCurrentPlayerTurn();
+
+
 
 public slots:
 
