@@ -67,6 +67,15 @@ QPointF MainUI::axial_to_pixel(QPoint point, int size)
     return QPointF(x, y);
 }
 
+GraphicHex* MainUI::getCorrespondingGraphicHex(std::shared_ptr<Common::Hex> hex)
+{
+    for (auto graphicalHex : graphicHexesVector_) {
+        if (graphicalHex->getHex() == hex) {
+            return graphicalHex;
+        }
+    }
+}
+
 void MainUI::givePawnNewCoordinates(std::shared_ptr<Common::Hex> hex)
 {
     Common::GamePhase phase = gameState_->currentGamePhase();
@@ -80,11 +89,13 @@ void MainUI::givePawnNewCoordinates(std::shared_ptr<Common::Hex> hex)
             std::vector<std::shared_ptr<Common::Pawn> > pawns = selectedHex_->getPawns();
             if (pawns.size() != 0) {
                 pawn_ = pawns.at(0);
-            } else {
-
+            } else {                
                 selectedHex_ = nullptr;
+                std::cout << "no pawn there" << std::endl;
+                GraphicHex *graphicHex = getCorrespondingGraphicHex(hex);
+                graphicHex->resetClicked();
+                return;
             }
-
         } else {
 
             int movesLeft = gameRunner_->movePawn(selectedHex_->getCoordinates(), hex->getCoordinates(), pawn_->getId());
@@ -93,8 +104,6 @@ void MainUI::givePawnNewCoordinates(std::shared_ptr<Common::Hex> hex)
                     graphicalHex->resetClicked();
                 }
             }
-            //gameState_->changeGamePhase(Common::GamePhase::SINKING);
-
             selectedHex_ = nullptr;
             pawn_ = nullptr;
 
@@ -103,19 +112,31 @@ void MainUI::givePawnNewCoordinates(std::shared_ptr<Common::Hex> hex)
                     gameState_->changeGamePhase(Common::SINKING);
                 } else {
                     gameState_->changePlayerTurn((gameState_->currentPlayer()+1));
+                    QString str = QString::number(gameState_->currentPlayer()+1);
+                    str.append(" turn");
+                    ui->textEdit->append(str);
                 }
             }
-
-
             }
         }
         catch(Common::IllegalMoveException &i)
         {
             std::cout << i.msg() << std::endl;
+            ui->textEdit->append(QString::fromStdString(i.msg()));
         }
-    } else if (gameState_->currentGamePhase() == Common::GamePhase::SINKING)
+    }
+    else if (gameState_->currentGamePhase() == Common::GamePhase::SINKING)
     {
-        gameRunner_->flipTile(hex->getCoordinates());
+        try {
+            gameRunner_->flipTile(hex->getCoordinates());
+            GraphicHex *graphicHex = getCorrespondingGraphicHex(hex);
+            graphicHex->resetClicked();
+            graphicHex->changeType(hex->getPieceType());
+        }
+        catch(Common::IllegalMoveException &i) {
+            std::cout << i.msg() << std::endl;
+            ui->textEdit->append(QString::fromStdString(i.msg()));
+        }
     }
 
 }

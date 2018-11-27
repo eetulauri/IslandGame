@@ -46,6 +46,7 @@ public:
     void resetClicked();
     Common::CubeCoordinate getCoordinates();
     std::shared_ptr<Common::Hex> getHex();
+    void changeType(std::string type);
 
 signals:
     void hexOnClick(std::shared_ptr<Common::Hex> hex);

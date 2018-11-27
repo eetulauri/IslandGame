@@ -198,6 +198,11 @@ std::shared_ptr<Common::Hex> GraphicHex::getHex()
     return hex_;
 }
 
+void GraphicHex::changeType(std::string type)
+{
+    type_ = type;
+}
+
 void GraphicHex::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     QPen pen(Qt::red);
