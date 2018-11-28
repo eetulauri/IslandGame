@@ -224,11 +224,13 @@ void MainUI::gamePhaseSpinning(std::shared_ptr<Common::Hex> hex)
                     for (auto player : gameBoard_->getPlayerVector()) {
                         player->setActionsLeft(3);
                     }
+                    moveActors_ = false;
                 } else {
                     gameState_->changePlayerTurn((gameState_->currentPlayer()+1));
                     printCurrentPlayerTurn();
                     selectedHex_ = nullptr;
                     pawn_ = nullptr;
+                    moveActors_ = false;
                  }
 
             }
