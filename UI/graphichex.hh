@@ -2,7 +2,11 @@
 #define GRAPHICHEX_HH
 
 
-#include <hex.hh>
+#include "gameboard.hh"
+
+#include "hex.hh"
+
+
 #include <math.h>
 #include <QGraphicsItem>
 #include <QPainterPath>
@@ -46,6 +50,8 @@ public:
     Common::CubeCoordinate getCoordinates();
     std::shared_ptr<Common::Hex> getHex();
     void changeType(std::string type);
+    QString getImagePath(std::string name);
+
 
 signals:
     void hexOnClick(std::shared_ptr<Common::Hex> hex);
