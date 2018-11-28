@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 
     std::vector<std::shared_ptr<Common::IPlayer>> playerVector;
 
-    for( int a = 1; a < 3; a++){
+    for( int a = 1; a < 4; a++){
         std::shared_ptr<Student::Player> player1 = std::make_shared<Student::Player>(a);
         playerVector.push_back(player1);
         gameBoard->addPlayer(player1);

@@ -2,10 +2,11 @@
 
 
 
-Student::GameState::GameState()
+Student::GameState::GameState() :
+    current_(Common::MOVEMENT),
+    currentPlayer_(1)
 {
-    current_ = Common::MOVEMENT;
-    currentPlayer_ = 1;
+
 }
 
 Student::GameState::~GameState()

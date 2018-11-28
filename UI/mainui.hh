@@ -40,10 +40,19 @@ public:
     QPointF axial_to_pixel(QPoint point,int size);
     GraphicHex* getCorrespondingGraphicHex(std::shared_ptr<Common::Hex> hex);
 
+    void gamePhaseMovement(std::shared_ptr<Common::Hex> hex);
+    void gamePhaseSinking(std::shared_ptr<Common::Hex> hex);
+    void gamePhaseSpinning(std::shared_ptr<Common::Hex> hex);
+
+    void printCurrentPlayerTurn();
+
+
 
 public slots:
 
     void givePawnNewCoordinates(std::shared_ptr<Common::Hex> hex);
+    void skipTurn();
+    void spinWheel();
 
 
 
@@ -56,8 +65,10 @@ private:
 
     std::shared_ptr<Common::Hex> selectedHex_;
     std::shared_ptr<Common::Pawn> pawn_;
+    std::shared_ptr<Common::Actor> actor_;
     std::vector<GraphicHex*> graphicHexesVector_;
-
+    std::pair<std::string, std::string> wheel_;
+    bool moveActors_;
 };
 
 #endif // MAINUI_HH

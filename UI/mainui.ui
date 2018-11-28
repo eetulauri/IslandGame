@@ -27,6 +27,19 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
+         <widget class="QPushButton" name="spinWheelButton">
+          <property name="maximumSize">
+           <size>
+            <width>600</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Spin wheel</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QGraphicsView" name="graphicsView_2">
           <property name="maximumSize">
            <size>
@@ -37,12 +50,38 @@
          </widget>
         </item>
         <item>
+         <widget class="QPushButton" name="skipTurnButton">
+          <property name="maximumSize">
+           <size>
+            <width>600</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Skip turn</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QTextEdit" name="textEdit">
           <property name="maximumSize">
            <size>
             <width>600</width>
             <height>16777215</height>
            </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="quitGameButton">
+          <property name="maximumSize">
+           <size>
+            <width>600</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Quit Game</string>
           </property>
          </widget>
         </item>
@@ -65,5 +104,22 @@
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>quitGameButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainUI</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1263</x>
+     <y>1029</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>959</x>
+     <y>539</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

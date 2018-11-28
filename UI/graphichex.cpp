@@ -67,6 +67,7 @@ void GraphicHex::drawPawn(QPainter *painter)
         double x = coord_.x;
         double y = coord_.y;
 
+
         std::shared_ptr<QRectF> pawnGraphical = std::make_shared<QRectF>();
         pawnGraphical->setCoords(x, y, x ,y);
         pawnGraphical->setWidth(20);
@@ -91,23 +92,15 @@ void GraphicHex::drawTransport(QPainter *painter)
     if (transports.size() != 0) {
 
         std::shared_ptr<Common::Transport> transport = transports.at(0);
-        brush.setStyle(Qt::SolidPattern);
-        brush.setColor(Qt::darkRed);
-        painter->setPen(pen);
-        painter->setBrush(brush);
-        double x = coord_.x;
-        double y = coord_.y;
+        std::string transportType = transport->getTransportType();
 
-        std::shared_ptr<QRectF> transportGraphical = std::make_shared<QRectF>();
-        transportGraphical->setCoords(x, y, x ,y);
-        transportGraphical->setWidth(20);
-        transportGraphical->setHeight(20);
-        painter->drawRect(*transportGraphical);
-        QString str = "1";
-        std::shared_ptr<QGraphicsSimpleTextItem> number = std::make_shared<QGraphicsSimpleTextItem>();
-        //number->setParentItem(*pawnGraphical);
-        number->setText(str);
-
+        QImage image;
+        image.load(getImagePath(transportType));
+        QRectF imageArea;
+        double imageX = -size_*(3.0/5.0);
+        double imageY = -size_*(3.0/5.0);
+        imageArea.setRect(imageX, imageY, (6.0/5.0) * size_, (6.0 /5.0) * size_);
+        painter->drawImage(imageArea, image);
 
     }
 }
@@ -120,23 +113,15 @@ void GraphicHex::drawActor(QPainter *painter)
     if (actors.size() != 0) {
 
         std::shared_ptr<Common::Actor> actor = actors.at(0);
-        brush.setStyle(Qt::SolidPattern);
-        brush.setColor(Qt::darkGreen);
-        painter->setPen(pen);
-        painter->setBrush(brush);
-        double x = coord_.x;
-        double y = coord_.y;
+        std::string actorType = actor->getActorType();
 
-        std::shared_ptr<QRectF> actorGraphical = std::make_shared<QRectF>();
-        actorGraphical->setCoords(x, y, x ,y);
-        actorGraphical->setWidth(20);
-        actorGraphical->setHeight(20);
-        painter->drawRect(*actorGraphical);
-        QString str = "1";
-        std::shared_ptr<QGraphicsSimpleTextItem> number = std::make_shared<QGraphicsSimpleTextItem>();
-        //number->setParentItem(*pawnGraphical);
-        number->setText(str);
-
+        QImage image;
+        image.load(getImagePath(actorType));
+        QRectF imageArea;
+        double imageX = -size_*(3.0/5.0);
+        double imageY = -size_*(3.0/5.0);
+        imageArea.setRect(imageX, imageY, (6.0/5.0) * size_, (6.0 /5.0) * size_);
+        painter->drawImage(imageArea, image);
 
     }
 }
@@ -201,6 +186,25 @@ std::shared_ptr<Common::Hex> GraphicHex::getHex()
 void GraphicHex::changeType(std::string type)
 {
     type_ = type;
+}
+
+QString GraphicHex::getImagePath(std::string name)
+{
+    std::unordered_map<std::string, std::string> imageMap = {{"boat", ":/images/boat.png"},
+                                                        {"dolphin", ":/images/dolphin.png"},
+                                                        {"shark", ":/images/shark.png"},
+                                                        {"kraken", ":/images/kraken.png"},
+                                                        {"seamunster", ":/images/seamunster.png"},
+                                                        {"vortex", ":/images/vortex.png"}};
+
+
+    for (auto &type : imageMap)
+    {
+        if (type.first == name)
+        {
+            return QString::fromStdString(type.second);
+        }
+    }
 }
 
 void GraphicHex::mousePressEvent(QGraphicsSceneMouseEvent *event)
