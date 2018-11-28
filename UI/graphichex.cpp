@@ -127,16 +127,45 @@ void GraphicHex::drawActor(QPainter *painter)
         double x = coord_.x;
         double y = coord_.y;
 
+        /*
+        std::shared_ptr<QLabel> label = std::make_shared<QLabel>();
+        QPixmap p(":/images/shark.png");
+        label->setFixedWidth(20);
+        label->setFixedHeight(20);
+        p = p.scaled(label->size(), Qt::KeepAspectRatio);
+        label->setp
+        label->setPixmap(p);
+        label->setGeometry(x, y, 20, 20);
+        label->show();
+        */
+
+        QImage image;
+        image.load(":/images/shark.png");
+        QRectF imageArea;
+        double imageX = -size_*(3.0/5.0);
+        double imageY = -size_*(3.0/5.0);
+        imageArea.setRect(imageX, imageY, (6.0/5.0) * size_, (6.0 /5.0) * size_);
+        painter->drawImage(imageArea, image);
+
+        /*
+        std::shared_ptr<QGraphicsSimpleTextItem> actorGraphical = std::make_shared<QGraphicsSimpleTextItem>();
+        QString str = "S";
+        actorGraphical->setText(str);
+        actorGraphical->setParentItem(this);
+        this->update();
+        */
+
+        /*
         std::shared_ptr<QRectF> actorGraphical = std::make_shared<QRectF>();
         actorGraphical->setCoords(x, y, x ,y);
         actorGraphical->setWidth(20);
         actorGraphical->setHeight(20);
-        painter->drawRect(*actorGraphical);
+        //painter->drawRect(*actorGraphical);
         QString str = "1";
         std::shared_ptr<QGraphicsSimpleTextItem> number = std::make_shared<QGraphicsSimpleTextItem>();
-        //number->setParentItem(*pawnGraphical);
+        number->setParentItem(this);
         number->setText(str);
-
+        */
 
     }
 }

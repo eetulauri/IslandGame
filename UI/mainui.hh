@@ -52,6 +52,7 @@ public slots:
 
     void givePawnNewCoordinates(std::shared_ptr<Common::Hex> hex);
     void skipTurn();
+    void spinWheel();
 
 
 
@@ -64,8 +65,10 @@ private:
 
     std::shared_ptr<Common::Hex> selectedHex_;
     std::shared_ptr<Common::Pawn> pawn_;
+    std::shared_ptr<Common::Actor> actor_;
     std::vector<GraphicHex*> graphicHexesVector_;
-
+    std::pair<std::string, std::string> wheel_;
+    bool moveActors_;
 };
 
 #endif // MAINUI_HH

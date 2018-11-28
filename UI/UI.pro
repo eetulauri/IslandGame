@@ -27,6 +27,9 @@ HEADERS  += \
     graphichex.hh \
     mainui.hh
 
+RESOURCES += \
+    images
+
 INCLUDEPATH += $$PWD/../GameLogic/Engine
 DEPENDPATH += $$PWD/../GameLogic/Engine
 
@@ -64,3 +67,7 @@ POST_TARGETDEPS += copyfiles
 
 FORMS += \
     mainui.ui
+
+RESOURCES +=
+
+DISTFILES +=

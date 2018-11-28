@@ -15,11 +15,10 @@
 #include <QString>
 #include <string>
 #include <memory>
+#include <QLabel>
+#include <QPixmap>
 
-
-
-#define PI 3.14159265
-
+const double PI = 3.14159265;
 
 class GraphicHex : public QObject, public QGraphicsItem
 {
