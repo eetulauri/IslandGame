@@ -45,9 +45,12 @@ public:
 
     void createPawns();
     void addPlayer(std::shared_ptr<Student::Player> player);
+    std::vector<std::shared_ptr<Common::IPlayer>> getPlayerVector();
 
     std::vector<Common::CubeCoordinate> calculateCornerPieces();
     std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>> getHexesContainer();
+
+
 
 
 

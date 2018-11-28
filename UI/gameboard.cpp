@@ -252,6 +252,11 @@ void Student::GameBoard::addPlayer(std::shared_ptr<Student::Player> player)
     players_.push_back(player);
 }
 
+std::vector<std::shared_ptr<Common::IPlayer> > Student::GameBoard::getPlayerVector()
+{
+    return players_;
+}
+
 
 
 std::vector<Common::CubeCoordinate> Student::GameBoard::calculateCornerPieces()

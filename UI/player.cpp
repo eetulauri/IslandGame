@@ -3,7 +3,7 @@
 
 Student::Player::Player(int id) :
     playerId_(id),
-    actionsLeft_(100)
+    actionsLeft_(3)
 {
 }
 

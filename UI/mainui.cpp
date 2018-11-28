@@ -17,6 +17,8 @@ MainUI::MainUI(std::shared_ptr<Student::GameBoard> gameBoard,
     ui->graphicsView->setScene(scene);
     scene_ = scene;
 
+    QObject::connect(ui->skipTurnButton, &QPushButton::clicked,
+                     this, &MainUI::skipTurn);
 
     drawHex();
     ui->textEdit->append("Game Start!");
@@ -32,7 +34,6 @@ MainUI::~MainUI()
 void MainUI::drawHex()
 {
 
-    //std::vector<std::shared_ptr<Common::Hex>> hexesContainer = gameBoard_->getHexesContainer();
     std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>> hexesMap = gameBoard_->getHexesContainer();
 
     int size = 28;
@@ -76,6 +77,8 @@ GraphicHex* MainUI::getCorrespondingGraphicHex(std::shared_ptr<Common::Hex> hex)
             return graphicalHex;
         }
     }
+    std::cout << "DEBUG: no corresponding hex found" << std::endl;
+    return nullptr;
 }
 
 void MainUI::gamePhaseMovement(std::shared_ptr<Common::Hex> hex)
@@ -88,11 +91,13 @@ void MainUI::gamePhaseMovement(std::shared_ptr<Common::Hex> hex)
             std::vector<std::shared_ptr<Common::Pawn> > pawns = selectedHex_->getPawns();
             if (pawns.size() != 0) {
                 pawn_ = pawns.at(0);
-            } else {
-                selectedHex_ = nullptr;
+            } else {                               
                 ui->textEdit->append("Incorrect tile: no pawn there");
                 GraphicHex *graphicHex = getCorrespondingGraphicHex(hex);
                 graphicHex->resetClicked();
+                graphicHex = getCorrespondingGraphicHex(selectedHex_);
+                graphicHex->resetClicked();
+                selectedHex_ = nullptr;
                 return;
             }
         } else {
@@ -106,7 +111,9 @@ void MainUI::gamePhaseMovement(std::shared_ptr<Common::Hex> hex)
             selectedHex_ = nullptr;
             pawn_ = nullptr;
 
-            ui->textEdit->append(QString::number(movesLeft));
+            QString movesLeftStr = QString::number(movesLeft);
+            movesLeftStr.append(" Moves left!");
+            ui->textEdit->append(movesLeftStr);
 
             if (movesLeft <= 0) {
                 if (gameState_->currentPlayer() == gameRunner_->playerAmount()) {
@@ -117,6 +124,7 @@ void MainUI::gamePhaseMovement(std::shared_ptr<Common::Hex> hex)
                 } else {
                     gameState_->changePlayerTurn((gameState_->currentPlayer()+1));
                     printCurrentPlayerTurn();
+
                 }
             }
         }
@@ -127,6 +135,8 @@ void MainUI::gamePhaseMovement(std::shared_ptr<Common::Hex> hex)
         ui->textEdit->append(QString::fromStdString(i.msg()));
         GraphicHex *graphicHex = getCorrespondingGraphicHex(hex);
         graphicHex->resetClicked();
+        selectedHex_ = nullptr;
+        pawn_ = nullptr;
     }
 
 }
@@ -167,6 +177,10 @@ void MainUI::gamePhaseSpinning(std::shared_ptr<Common::Hex> hex)
     printCurrentPlayerTurn();
     selectedHex_ = nullptr;
     pawn_ = nullptr;
+
+    for (auto player : gameBoard_->getPlayerVector()) {
+        player->setActionsLeft(3);
+    }
 }
 
 void MainUI::printCurrentPlayerTurn()
@@ -191,6 +205,27 @@ void MainUI::givePawnNewCoordinates(std::shared_ptr<Common::Hex> hex)
         gamePhaseSpinning(hex);
     }
 
+}
+
+void MainUI::skipTurn()
+{
+    if(gameState_->currentPlayer() == gameRunner_->playerAmount()) {
+        if (gameState_->currentGamePhase() == Common::MOVEMENT) {
+            gameState_->changeGamePhase(Common::SINKING);
+            ui->textEdit->append("Game Phase changed to: Sinking");
+        } else if (gameState_->currentGamePhase() == Common::SINKING) {
+            gameState_->changeGamePhase(Common::SPINNING);
+            ui->textEdit->append("Game Phase changed to: Spinning");
+        } else {
+            gameState_->changeGamePhase(Common::MOVEMENT);
+            ui->textEdit->append("Game Phase changed to: Movement");
+        }
+        gameState_->changePlayerTurn(1);
+        printCurrentPlayerTurn();
+    } else {
+        gameState_->changePlayerTurn((gameState_->currentPlayer()+1));
+        printCurrentPlayerTurn();
+    }
 }
 
 
