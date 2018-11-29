@@ -18,14 +18,16 @@ SOURCES += main.cc \
     gameboard.cpp \
     gamestate.cpp \
     mainui.cpp \
-    player.cpp
+    player.cpp \
+    dialog.cpp
 
 HEADERS  += \
     gameboard.hh \
     player.hh \
     gamestate.hh \
     graphichex.hh \
-    mainui.hh
+    mainui.hh \
+    dialog.hh
 
 RESOURCES += \
     images
@@ -66,7 +68,8 @@ QMAKE_EXTRA_TARGETS += copyfiles
 POST_TARGETDEPS += copyfiles
 
 FORMS += \
-    mainui.ui
+    mainui.ui \
+    dialog.ui
 
 RESOURCES +=
 
