@@ -3,7 +3,9 @@
 
 Student::Player::Player(int id) :
     playerId_(id),
-    actionsLeft_(3)
+    actionsLeft_(3),
+    movesUsedCounter_(0),
+    startingCoordinates_(0, 0, 0)
 {
 }
 
@@ -25,4 +27,24 @@ void Student::Player::setActionsLeft(unsigned int actionsLeft)
 unsigned int Student::Player::getActionsLeft() const
 {
     return actionsLeft_;
+}
+
+void Student::Player::addToMovesUsed()
+{
+    movesUsedCounter_ += 1;
+}
+
+int Student::Player::getMovesUsed()
+{
+    return movesUsedCounter_;
+}
+
+void Student::Player::setStartingCoordinates(Common::CubeCoordinate coord)
+{
+    startingCoordinates_ = coord;
+}
+
+Common::CubeCoordinate Student::Player::getStartingCoordinates()
+{
+    return startingCoordinates_;
 }

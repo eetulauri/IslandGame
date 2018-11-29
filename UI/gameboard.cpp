@@ -240,10 +240,10 @@ void Student::GameBoard::createPawns()
 {
     std::vector<Common::CubeCoordinate> cornerPieces = calculateCornerPieces();
 
+
     for (long unsigned int i = 1; i < players_.size()+1; i++) {
         addPawn(i, i, cornerPieces.at(i-1));
     }
-
 
 }
 
@@ -252,7 +252,7 @@ void Student::GameBoard::addPlayer(std::shared_ptr<Student::Player> player)
     players_.push_back(player);
 }
 
-std::vector<std::shared_ptr<Common::IPlayer> > Student::GameBoard::getPlayerVector()
+std::vector<std::shared_ptr<Student::Player> > Student::GameBoard::getPlayerVector()
 {
     return players_;
 }

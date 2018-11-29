@@ -32,6 +32,17 @@ MainUI::MainUI(std::shared_ptr<Student::GameBoard> gameBoard,
     drawHex();
     ui->textEdit->append("Game Start!");
     printCurrentPlayerTurn();
+
+    // giving players their starting coordinates so that their pawns can be
+    // reset back to that position
+    std::vector<Common::CubeCoordinate> coords = gameBoard->calculateCornerPieces();
+    int i = 0;
+    for (auto player : gameBoard_->getPlayerVector()) {
+        player->setStartingCoordinates(coords.at(i));
+        i++;
+    }
+
+
 }
 
 MainUI::~MainUI()
@@ -126,7 +137,37 @@ void MainUI::gamePhaseMovement(std::shared_ptr<Common::Hex> hex)
     else {
         try {
             // moving the pawn. return value is not needed since we're only permitting moving once per turn
-            gameRunner_->movePawn(selectedHex_->getCoordinates(), hex->getCoordinates(), pawn_->getId());
+            std::vector<std::shared_ptr<Common::Transport> > transports = selectedHex_->getTransports();
+            bool isPawnInTransport = false;
+            std::shared_ptr<Common::Transport> transport;
+            if (transports.size() != 0) {
+                transport = transports.at(0);
+                isPawnInTransport = transport->isPawnInTransport(pawn_);
+            }
+            if (isPawnInTransport == true) {
+                transport->move(hex);
+                transport->removePawns();
+                ui->textEdit->append("Pawn was removed from transport!");
+            } else {
+                gameRunner_->movePawn(selectedHex_->getCoordinates(), hex->getCoordinates(), pawn_->getId());
+                std::vector<std::shared_ptr<Common::Transport> > transports1 = hex->getTransports();
+                if (transports1.size() != 0) {
+                    std::shared_ptr<Common::Transport> transport1 = transports1.at(0);
+                    transport1->addPawn(pawn_);
+                    ui->textEdit->append("Pawn was added to transport!");
+                }
+            }
+
+            int playerId = gameState_->currentPlayer();
+            for (auto player : gameBoard_->getPlayerVector()) {
+                if (player->getPlayerId() == playerId) {
+                    std::shared_ptr<Student::Player> playerShared = player;
+                    playerShared->addToMovesUsed();
+                    break;
+                }
+            }
+
+            checkIfPlayerHasWon(hex);
 
             for (auto &graphicalHex : graphicHexesVector_) {
                 if (graphicalHex->getHex() == selectedHex_ or graphicalHex->getHex()== hex) {
@@ -138,7 +179,6 @@ void MainUI::gamePhaseMovement(std::shared_ptr<Common::Hex> hex)
             pawn_ = nullptr;
 
             nextPhase();
-
 
         }
         catch(Common::IllegalMoveException &i)
@@ -163,7 +203,31 @@ void MainUI::gamePhaseSinking(std::shared_ptr<Common::Hex> hex)
 
     GraphicHex *graphicHex = getCorrespondingGraphicHex(hex);
     try {
-        gameRunner_->flipTile(hex->getCoordinates());
+        std::string actorName = gameRunner_->flipTile(hex->getCoordinates());
+
+        QString actorSpawnMessage = "Flipped tile! ";
+        actorSpawnMessage.append(QString::fromStdString(actorName));
+        actorSpawnMessage.append(" spawned!");
+        ui->textEdit->append(actorSpawnMessage);
+
+        std::vector<std::shared_ptr<Common::Actor> > actorVector = hex->getActors();
+        if (actorVector.size() != 0) {
+            std::shared_ptr<Common::Actor> actor = actorVector.at(0);
+            if (actorName == "shark" or actorName == "vortex" or actorName == "seamunster") {
+                actor->doAction();
+                Common::CubeCoordinate coord;
+                for (auto player : gameBoard_->getPlayerVector()) {
+                    if (player->getPlayerId() == gameState_->currentPlayer()) {
+                        coord = player->getStartingCoordinates();
+                    }
+                }
+                gameBoard_->addPawn(gameState_->currentPlayer(), gameState_->currentPlayer(), coord);
+                GraphicHex *graphicalHex = getCorrespondingGraphicHex(gameBoard_->getHex(coord));
+                graphicalHex->update();
+            }
+
+        }
+
         graphicHex->resetClicked();
         graphicHex->changeType(hex->getPieceType());
         nextPhase();
@@ -233,8 +297,6 @@ void MainUI::gamePhaseSpinning(std::shared_ptr<Common::Hex> hex)
                 return;
             }
 
-
-
         }
         // the second click
         else {
@@ -251,8 +313,6 @@ void MainUI::gamePhaseSpinning(std::shared_ptr<Common::Hex> hex)
                                                           transport_->getId(),
                                                           wheel_.second);
                 }
-
-
 
                 for (auto &graphicalHex : graphicHexesVector_) {
                     if (graphicalHex->getHex() == selectedHex_ or graphicalHex->getHex()== hex) {
@@ -280,10 +340,37 @@ void MainUI::gamePhaseSpinning(std::shared_ptr<Common::Hex> hex)
 
 void MainUI::printCurrentPlayerTurn()
 {
+    ui->textEdit->setTextColor(Qt::red);
     QString str = "Player ";
     str.append(QString::number(gameState_->currentPlayer()));
     str.append("'s turn");
     ui->textEdit->append(str);
+    ui->textEdit->setTextColor(Qt::black);
+}
+
+void MainUI::checkIfPlayerHasWon(std::shared_ptr<Common::Hex> hex)
+{
+    if (hex->getCoordinates() == Common::CubeCoordinate(0, 0, 0)) {
+
+        QString hasWonMessage = "Player ";
+        hasWonMessage.append(QString::number(gameState_->currentPlayer()));
+        hasWonMessage.append(" has won the game!!! It took just ");
+
+        int movesUsed = 0;
+        int playerId = gameState_->currentPlayer();
+        for (auto player : gameBoard_->getPlayerVector()) {
+            if (player->getPlayerId() == playerId) {
+                std::shared_ptr<Student::Player> playerShared = player;
+                 movesUsed = playerShared->getMovesUsed();
+                break;
+            }
+        }
+        hasWonMessage.append(QString::number(movesUsed));
+        hasWonMessage.append(" moves!");
+        QMessageBox::information(this, "Winner winner chicken dinner", hasWonMessage);
+        exit(0);
+
+    }
 }
 
 void MainUI::givePawnNewCoordinates(std::shared_ptr<Common::Hex> hex)
@@ -338,31 +425,11 @@ void MainUI::nextPhase()
         wheel_ = std::make_pair("","");
         moveActors_ = false;
         ui->spinWheelButton->setEnabled(false);
+        for (auto &player : gameBoard_->getPlayerVector()) {
+            player->setActionsLeft(3);
+        }
     }
 
-    /*
-    // if its the last players turn, gamePhase is changed to the next phase
-    // otherwise the turn is given to the next player
-    if(gameState_->currentPlayer() == gameRunner_->playerAmount()) {
-        if (gameState_->currentGamePhase() == Common::MOVEMENT) {
-            gameState_->changeGamePhase(Common::SINKING);
-            ui->textEdit->append("Game Phase changed to: Sinking");
-        } else if (gameState_->currentGamePhase() == Common::SINKING) {
-            gameState_->changeGamePhase(Common::SPINNING);
-            ui->textEdit->append("Game Phase changed to: Spinning");
-        } else {
-            gameState_->changeGamePhase(Common::MOVEMENT);
-            ui->textEdit->append("Game Phase changed to: Movement");
-        }
-        gameState_->changePlayerTurn(1);
-        printCurrentPlayerTurn();
-        selectedHex_ = nullptr;
-        pawn_ = nullptr;
-    } else {
-        gameState_->changePlayerTurn((gameState_->currentPlayer()+1));
-        printCurrentPlayerTurn();
-    }
-    */
 }
 
 void MainUI::spinWheel()
