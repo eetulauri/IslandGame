@@ -266,6 +266,8 @@ void MainUI::gamePhaseSpinning(std::shared_ptr<Common::Hex> hex)
     if (moveActors_ == false) {
         printCurrentPlayerTurn();
         ui->textEdit->append("Its Game Phase Spinning! Spin the wheel!");
+        GraphicHex *graphicHex = getCorrespondingGraphicHex(hex);
+        graphicHex->resetClicked();
         return;
     } else {
         if (selectedHex_ == nullptr) {
@@ -453,6 +455,9 @@ void MainUI::nextPhase()
         // we dont want previous selected hexes interfering with the next players actions
         selectedHex_ = nullptr;
         pawn_ = nullptr;
+        // resetting wheel
+        wheel_ = std::make_pair("","");
+        moveActors_ = false;
         ui->spinWheelButton->setEnabled(false);
     }
 
