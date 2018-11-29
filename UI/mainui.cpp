@@ -155,71 +155,7 @@ void MainUI::gamePhaseMovement(std::shared_ptr<Common::Hex> hex)
             selectedHex_ = nullptr;
             pawn_ = nullptr;
         }
-
-
     }
-    /*
-    try
-    {
-
-        if (selectedHex_ == nullptr) {
-            selectedHex_ = hex;
-
-            if (pawns.size() != 0) {
-                pawn_ = pawns.at(0);
-            } else {                               
-                ui->textEdit->append("Incorrect tile: no pawn there");
-                GraphicHex *graphicHex = getCorrespondingGraphicHex(hex);
-                graphicHex->resetClicked();
-                graphicHex = getCorrespondingGraphicHex(selectedHex_);
-                graphicHex->resetClicked();
-                selectedHex_ = nullptr;
-                return;
-            }
-        } else {
-
-            int movesLeft = gameRunner_->movePawn(selectedHex_->getCoordinates(), hex->getCoordinates(), pawn_->getId());
-            for (auto &graphicalHex : graphicHexesVector_) {
-                if (graphicalHex->getHex() == selectedHex_ or graphicalHex->getHex()== hex) {
-                    graphicalHex->resetClicked();
-                }
-            }
-            selectedHex_ = nullptr;
-            pawn_ = nullptr;
-
-            QString movesLeftStr = QString::number(movesLeft);
-            movesLeftStr.append(" Moves left!");
-            ui->textEdit->append(movesLeftStr);
-
-            if (movesLeft <= 0) {
-                if (gameState_->currentPlayer() == gameRunner_->playerAmount()) {
-                    gameState_->changeGamePhase(Common::SINKING);
-                    ui->textEdit->append("Game Phase changed to: Sinking");
-                    gameState_->changePlayerTurn(1);
-                    printCurrentPlayerTurn();
-                    selectedHex_ = nullptr;
-                    pawn_ = nullptr;
-                } else {
-                    gameState_->changePlayerTurn((gameState_->currentPlayer()+1));
-                    printCurrentPlayerTurn();
-                    selectedHex_ = nullptr;
-                    pawn_ = nullptr;
-
-                }
-            }
-        }
-    }
-    catch(Common::IllegalMoveException &i)
-    {
-        std::cout << i.msg() << std::endl;
-        ui->textEdit->append(QString::fromStdString(i.msg()));
-        GraphicHex *graphicHex = getCorrespondingGraphicHex(hex);
-        graphicHex->resetClicked();
-        selectedHex_ = nullptr;
-        pawn_ = nullptr;
-    }
-    */
-
 }
 
 void MainUI::gamePhaseSinking(std::shared_ptr<Common::Hex> hex)
@@ -231,27 +167,6 @@ void MainUI::gamePhaseSinking(std::shared_ptr<Common::Hex> hex)
         graphicHex->resetClicked();
         graphicHex->changeType(hex->getPieceType());
         nextPhase();
-
-        /*
-        gameState_->changeGamePhase(Common::SPINNING);
-        ui->textEdit->append("Game Phase changed to: Spinning");
-        printCurrentPlayerTurn();
-        */
-
-        /*
-        if(gameState_->currentPlayer() == gameRunner_->playerAmount()) {
-            gameState_->changeGamePhase(Common::SPINNING);
-            ui->spinWheelButton->setEnabled(true);
-            ui->textEdit->append("Game Phase changed to: Spinning");
-            gameState_->changePlayerTurn(1);
-            printCurrentPlayerTurn();
-        } else {
-            gameState_->changePlayerTurn((gameState_->currentPlayer()+1));
-            printCurrentPlayerTurn();
-        }
-        */
-
-
     }
     catch(Common::IllegalMoveException &i) {
         std::cout << i.msg() << std::endl;
@@ -263,11 +178,15 @@ void MainUI::gamePhaseSinking(std::shared_ptr<Common::Hex> hex)
 
 void MainUI::gamePhaseSpinning(std::shared_ptr<Common::Hex> hex)
 {
+    // player must spin the wheel 1st before any actors can be moved
     if (moveActors_ == false) {
         printCurrentPlayerTurn();
         ui->textEdit->append("Its Game Phase Spinning! Spin the wheel!");
+        GraphicHex *graphicHex = getCorrespondingGraphicHex(hex);
+        graphicHex->resetClicked();
         return;
     } else {
+        // the 1st click
         if (selectedHex_ == nullptr) {
             selectedHex_ = hex;
             std::vector<std::shared_ptr<Common::Actor> > actors = selectedHex_->getActors();
@@ -291,7 +210,9 @@ void MainUI::gamePhaseSpinning(std::shared_ptr<Common::Hex> hex)
                 return;
             }
 
-        } else {
+        }
+        // the second click
+        else {
             try {
                 gameRunner_->moveActor(selectedHex_->getCoordinates(), hex->getCoordinates(), actor_->getId(), wheel_.second);
 
@@ -316,86 +237,6 @@ void MainUI::gamePhaseSpinning(std::shared_ptr<Common::Hex> hex)
                 pawn_ = nullptr;
             }
         }
-
-
-
-    /*
-    if (moveActors_ == false) {
-        printCurrentPlayerTurn();
-        ui->textEdit->append("Its Game Phase Spinning! Spin the wheel!");
-        return;
-    } else {
-        if (selectedHex_ == nullptr) {
-            selectedHex_ = hex;
-            std::vector<std::shared_ptr<Common::Actor> > actors = selectedHex_->getActors();
-            if (actors.size() != 0) {
-                actor_ = actors.at(0);
-            } else {
-                ui->textEdit->append("Incorrect tile: no actor there");
-                GraphicHex *graphicHex = getCorrespondingGraphicHex(hex);
-                graphicHex->resetClicked();
-                graphicHex = getCorrespondingGraphicHex(selectedHex_);
-                graphicHex->resetClicked();
-                selectedHex_ = nullptr;
-                return;
-            }
-        } else {
-            try {
-                gameRunner_->moveActor(selectedHex_->getCoordinates(), hex->getCoordinates(), actor_->getId(), wheel_.second);
-                for (auto &graphicalHex : graphicHexesVector_) {
-                    if (graphicalHex->getHex() == selectedHex_ or graphicalHex->getHex()== hex) {
-                        graphicalHex->resetClicked();
-                    }
-                }
-                if (gameState_->currentPlayer() == gameRunner_->playerAmount()) {
-                    gameState_->changeGamePhase(Common::MOVEMENT);
-                    ui->textEdit->append("Game Phase changed to: Movement");
-                    gameState_->changePlayerTurn(1);
-                    printCurrentPlayerTurn();
-                    selectedHex_ = nullptr;
-                    pawn_ = nullptr;
-                    for (auto player : gameBoard_->getPlayerVector()) {
-                        player->setActionsLeft(3);
-                    }
-                    moveActors_ = false;
-                } else {
-                    gameState_->changePlayerTurn((gameState_->currentPlayer()+1));
-                    printCurrentPlayerTurn();
-                    selectedHex_ = nullptr;
-                    pawn_ = nullptr;
-                    moveActors_ = false;
-                 }
-
-            }
-            catch(Common::IllegalMoveException &i) {
-                std::cout << i.msg() << std::endl;
-                ui->textEdit->append(QString::fromStdString(i.msg()));
-                GraphicHex *graphicHex = getCorrespondingGraphicHex(hex);
-                graphicHex->resetClicked();
-                selectedHex_ = nullptr;
-                pawn_ = nullptr;
-            }
-
-        }
-
-    }
-    */
-
-
-    /*
-    gameState_->changeGamePhase(Common::MOVEMENT);
-    gameState_->changePlayerTurn(1);
-    ui->textEdit->append("Game Phase changed to: Movement");
-
-    printCurrentPlayerTurn();
-
-    selectedHex_ = nullptr;
-    pawn_ = nullptr;
-
-    for (auto player : gameBoard_->getPlayerVector()) {
-        player->setActionsLeft(3);
-    }
-    */
     }
 }
 
@@ -453,6 +294,9 @@ void MainUI::nextPhase()
         // we dont want previous selected hexes interfering with the next players actions
         selectedHex_ = nullptr;
         pawn_ = nullptr;
+        // resetting wheel
+        wheel_ = std::make_pair("","");
+        moveActors_ = false;
         ui->spinWheelButton->setEnabled(false);
     }
 
