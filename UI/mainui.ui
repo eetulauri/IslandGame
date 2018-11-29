@@ -35,7 +35,7 @@
            </size>
           </property>
           <property name="text">
-           <string>Spin wheel</string>
+           <string>Spin  the wheel!</string>
           </property>
          </widget>
         </item>
@@ -58,7 +58,7 @@
            </size>
           </property>
           <property name="text">
-           <string>Skip turn</string>
+           <string>Next phase</string>
           </property>
          </widget>
         </item>

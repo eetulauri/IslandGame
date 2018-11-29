@@ -51,7 +51,7 @@ public:
 public slots:
 
     void givePawnNewCoordinates(std::shared_ptr<Common::Hex> hex);
-    void skipTurn();
+    void nextPhase();
     void spinWheel();
 
 

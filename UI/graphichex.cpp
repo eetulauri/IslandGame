@@ -60,24 +60,15 @@ void GraphicHex::drawPawn(QPainter *painter)
     if (pawns.size() != 0) {
 
         std::shared_ptr<Common::Pawn> pawn = pawns.at(0);
-        brush.setStyle(Qt::SolidPattern);
-        brush.setColor(Qt::white);
-        painter->setPen(pen);
-        painter->setBrush(brush);
-        double x = coord_.x;
-        double y = coord_.y;
+        std::string pawnId = std::to_string(pawn->getPlayerId());
 
-
-        std::shared_ptr<QRectF> pawnGraphical = std::make_shared<QRectF>();
-        pawnGraphical->setCoords(x, y, x ,y);
-        pawnGraphical->setWidth(20);
-        pawnGraphical->setHeight(20);
-        painter->drawRect(*pawnGraphical);
-        QString str = "1";
-        std::shared_ptr<QGraphicsSimpleTextItem> number = std::make_shared<QGraphicsSimpleTextItem>();
-        //number->setParentItem(*pawnGraphical);
-        number->setText(str);
-
+        QImage image;
+        image.load(getPawnImagePath(pawnId));
+        QRectF imageArea;
+        double imageX = -size_*(3.0/5.0);
+        double imageY = -size_*(3.0/5.0);
+        imageArea.setRect(imageX, imageY, (6.0/5.0) * size_, (6.0 /5.0) * size_);
+        painter->drawImage(imageArea, image);
 
     }
 
@@ -205,6 +196,26 @@ QString GraphicHex::getImagePath(std::string name)
             return QString::fromStdString(type.second);
         }
     }
+}
+
+QString GraphicHex::getPawnImagePath(std::string name)
+{
+    std::unordered_map<std::string, std::string> imageMap = {{"1", ":/images/pawn1.png"},
+                                                        {"2", ":/images/pawn2.png"},
+                                                        {"3", ":/images/pawn3.png"},
+                                                        {"4", ":/images/pawn4.png"},
+                                                        {"5", ":/images/pawn5.png"},
+                                                        {"6", ":/images/pawn6.png"}};
+
+
+    for (auto &type : imageMap)
+    {
+        if (type.first == name)
+        {
+            return QString::fromStdString(type.second);
+        }
+    }
+
 }
 
 void GraphicHex::mousePressEvent(QGraphicsSceneMouseEvent *event)
