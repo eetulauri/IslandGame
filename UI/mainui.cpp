@@ -126,7 +126,18 @@ void MainUI::gamePhaseMovement(std::shared_ptr<Common::Hex> hex)
     else {
         try {
             // moving the pawn. return value is not needed since we're only permitting moving once per turn
+
             gameRunner_->movePawn(selectedHex_->getCoordinates(), hex->getCoordinates(), pawn_->getId());
+            int playerId = gameState_->currentPlayer();
+            for (auto player : gameBoard_->getPlayerVector()) {
+                if (player->getPlayerId() == playerId) {
+                    std::shared_ptr<Student::Player> playerShared = player;
+                    playerShared->addToMovesUsed();
+                    break;
+                }
+            }
+
+            checkIfPlayerHasWon(hex);
 
             for (auto &graphicalHex : graphicHexesVector_) {
                 if (graphicalHex->getHex() == selectedHex_ or graphicalHex->getHex()== hex) {
@@ -286,6 +297,31 @@ void MainUI::printCurrentPlayerTurn()
     ui->textEdit->append(str);
 }
 
+void MainUI::checkIfPlayerHasWon(std::shared_ptr<Common::Hex> hex)
+{
+    if (hex->getCoordinates() == Common::CubeCoordinate(0, 0, 0)) {
+
+        QString hasWonMessage = "Player ";
+        hasWonMessage.append(QString::number(gameState_->currentPlayer()));
+        hasWonMessage.append(" has won the game!!! It took just ");
+
+        int movesUsed = 0;
+        int playerId = gameState_->currentPlayer();
+        for (auto player : gameBoard_->getPlayerVector()) {
+            if (player->getPlayerId() == playerId) {
+                std::shared_ptr<Student::Player> playerShared = player;
+                 movesUsed = playerShared->getMovesUsed();
+                break;
+            }
+        }
+        hasWonMessage.append(QString::number(movesUsed));
+        hasWonMessage.append(" moves!");
+        QMessageBox::information(this, "Winner winner chicken dinner", hasWonMessage);
+        exit(0);
+
+    }
+}
+
 void MainUI::givePawnNewCoordinates(std::shared_ptr<Common::Hex> hex)
 {
     if (gameState_->currentGamePhase() == Common::MOVEMENT)
@@ -338,31 +374,11 @@ void MainUI::nextPhase()
         wheel_ = std::make_pair("","");
         moveActors_ = false;
         ui->spinWheelButton->setEnabled(false);
+        for (auto &player : gameBoard_->getPlayerVector()) {
+            player->setActionsLeft(3);
+        }
     }
 
-    /*
-    // if its the last players turn, gamePhase is changed to the next phase
-    // otherwise the turn is given to the next player
-    if(gameState_->currentPlayer() == gameRunner_->playerAmount()) {
-        if (gameState_->currentGamePhase() == Common::MOVEMENT) {
-            gameState_->changeGamePhase(Common::SINKING);
-            ui->textEdit->append("Game Phase changed to: Sinking");
-        } else if (gameState_->currentGamePhase() == Common::SINKING) {
-            gameState_->changeGamePhase(Common::SPINNING);
-            ui->textEdit->append("Game Phase changed to: Spinning");
-        } else {
-            gameState_->changeGamePhase(Common::MOVEMENT);
-            ui->textEdit->append("Game Phase changed to: Movement");
-        }
-        gameState_->changePlayerTurn(1);
-        printCurrentPlayerTurn();
-        selectedHex_ = nullptr;
-        pawn_ = nullptr;
-    } else {
-        gameState_->changePlayerTurn((gameState_->currentPlayer()+1));
-        printCurrentPlayerTurn();
-    }
-    */
 }
 
 void MainUI::spinWheel()
