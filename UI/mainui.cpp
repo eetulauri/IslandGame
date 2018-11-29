@@ -188,12 +188,14 @@ void MainUI::gamePhaseSpinning(std::shared_ptr<Common::Hex> hex)
     } else {
         // the 1st click
         if (selectedHex_ == nullptr) {
-            selectedHex_ = hex;
-            std::vector<std::shared_ptr<Common::Actor> > actors = selectedHex_->getActors();
+            std::vector<std::shared_ptr<Common::Actor> > actors = hex->getActors();
+            std::vector<std::shared_ptr<Common::Transport> > transports = hex->getTransports();
+
             if (actors.size() != 0) {
                 std::shared_ptr<Common::Actor> actor = actors.at(0);
                 if (actor->getActorType() == wheel_.first) {
                     actor_ = actors.at(0);
+                    selectedHex_ = hex;
                 } else {
                     ui->textEdit->append("Incorrect tile: not the correct actor");
                     GraphicHex *graphicHex = getCorrespondingGraphicHex(hex);
@@ -202,19 +204,55 @@ void MainUI::gamePhaseSpinning(std::shared_ptr<Common::Hex> hex)
                     return;
                 }
 
-            } else {
+            } else if (transports.size() == 0) {
                 ui->textEdit->append("Incorrect tile: no actor there");
+                GraphicHex *graphicHex = getCorrespondingGraphicHex(hex);
+                graphicHex->resetClicked();
+                selectedHex_ = nullptr;
+
+            }
+
+            if (transports.size() != 0) {
+                std::shared_ptr<Common::Transport> transport = transports.at(0);
+                if (transport->getTransportType() == wheel_.first) {
+                    transport_ = transports.at(0);
+                    selectedHex_ = hex;
+                } else {
+                    ui->textEdit->append("Incorrect tile: not the correct transport");
+                    GraphicHex *graphicHex = getCorrespondingGraphicHex(hex);
+                    graphicHex->resetClicked();
+                    selectedHex_ = nullptr;
+                    return;
+                }
+
+            } else if (actors.size() == 0) {
+                ui->textEdit->append("Incorrect tile: no transport there");
                 GraphicHex *graphicHex = getCorrespondingGraphicHex(hex);
                 graphicHex->resetClicked();
                 selectedHex_ = nullptr;
                 return;
             }
 
+
+
         }
         // the second click
         else {
             try {
-                gameRunner_->moveActor(selectedHex_->getCoordinates(), hex->getCoordinates(), actor_->getId(), wheel_.second);
+                if (actor_ != nullptr) {
+                    gameRunner_->moveActor(selectedHex_->getCoordinates(),
+                                           hex->getCoordinates(),
+                                           actor_->getId(),
+                                           wheel_.second);
+
+                } else if (transport_ != nullptr) {
+                    gameRunner_->moveTransportWithSpinner(selectedHex_->getCoordinates(),
+                                                          hex->getCoordinates(),
+                                                          transport_->getId(),
+                                                          wheel_.second);
+                }
+
+
 
                 for (auto &graphicalHex : graphicHexesVector_) {
                     if (graphicalHex->getHex() == selectedHex_ or graphicalHex->getHex()== hex) {
@@ -294,6 +332,8 @@ void MainUI::nextPhase()
         // we dont want previous selected hexes interfering with the next players actions
         selectedHex_ = nullptr;
         pawn_ = nullptr;
+        actor_ = nullptr;
+        transport_ = nullptr;
         // resetting wheel
         wheel_ = std::make_pair("","");
         moveActors_ = false;

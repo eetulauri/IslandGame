@@ -66,6 +66,7 @@ private:
     std::shared_ptr<Common::Hex> selectedHex_;
     std::shared_ptr<Common::Pawn> pawn_;
     std::shared_ptr<Common::Actor> actor_;
+    std::shared_ptr<Common::Transport> transport_;
     std::vector<GraphicHex*> graphicHexesVector_;
     std::pair<std::string, std::string> wheel_;
     bool moveActors_;
