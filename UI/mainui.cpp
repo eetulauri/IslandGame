@@ -126,8 +126,27 @@ void MainUI::gamePhaseMovement(std::shared_ptr<Common::Hex> hex)
     else {
         try {
             // moving the pawn. return value is not needed since we're only permitting moving once per turn
+            std::vector<std::shared_ptr<Common::Transport> > transports = selectedHex_->getTransports();
+            bool isPawnInTransport = false;
+            std::shared_ptr<Common::Transport> transport;
+            if (transports.size() != 0) {
+                transport = transports.at(0);
+                isPawnInTransport = transport->isPawnInTransport(pawn_);
+            }
+            if (isPawnInTransport == true) {
+                transport->move(hex);
+                transport->removePawns();
+                ui->textEdit->append("Pawn was removed from transport!");
+            } else {
+                gameRunner_->movePawn(selectedHex_->getCoordinates(), hex->getCoordinates(), pawn_->getId());
+                std::vector<std::shared_ptr<Common::Transport> > transports1 = hex->getTransports();
+                if (transports1.size() != 0) {
+                    std::shared_ptr<Common::Transport> transport1 = transports1.at(0);
+                    transport1->addPawn(pawn_);
+                    ui->textEdit->append("Pawn was added to transport!");
+                }
+            }
 
-            gameRunner_->movePawn(selectedHex_->getCoordinates(), hex->getCoordinates(), pawn_->getId());
             int playerId = gameState_->currentPlayer();
             for (auto player : gameBoard_->getPlayerVector()) {
                 if (player->getPlayerId() == playerId) {
@@ -136,6 +155,9 @@ void MainUI::gamePhaseMovement(std::shared_ptr<Common::Hex> hex)
                     break;
                 }
             }
+
+
+
 
             checkIfPlayerHasWon(hex);
 
@@ -149,7 +171,6 @@ void MainUI::gamePhaseMovement(std::shared_ptr<Common::Hex> hex)
             pawn_ = nullptr;
 
             nextPhase();
-
 
         }
         catch(Common::IllegalMoveException &i)
@@ -174,7 +195,19 @@ void MainUI::gamePhaseSinking(std::shared_ptr<Common::Hex> hex)
 
     GraphicHex *graphicHex = getCorrespondingGraphicHex(hex);
     try {
-        gameRunner_->flipTile(hex->getCoordinates());
+        std::string actorName = gameRunner_->flipTile(hex->getCoordinates());
+
+        QString actorSpawnMessage = "Flipped tile! ";
+        actorSpawnMessage.append(QString::fromStdString(actorName));
+        actorSpawnMessage.append(" spawned!");
+        ui->textEdit->append(actorSpawnMessage);
+
+        std::vector<std::shared_ptr<Common::Actor> > actorVector = hex->getActors();
+        if (actorVector.size() != 0) {
+            std::shared_ptr<Common::Actor> actor = actorVector.at(0);
+            actor->doAction();
+        }
+
         graphicHex->resetClicked();
         graphicHex->changeType(hex->getPieceType());
         nextPhase();
@@ -244,8 +277,6 @@ void MainUI::gamePhaseSpinning(std::shared_ptr<Common::Hex> hex)
                 return;
             }
 
-
-
         }
         // the second click
         else {
@@ -291,10 +322,12 @@ void MainUI::gamePhaseSpinning(std::shared_ptr<Common::Hex> hex)
 
 void MainUI::printCurrentPlayerTurn()
 {
+    ui->textEdit->setTextColor(Qt::red);
     QString str = "Player ";
     str.append(QString::number(gameState_->currentPlayer()));
     str.append("'s turn");
     ui->textEdit->append(str);
+    ui->textEdit->setTextColor(Qt::black);
 }
 
 void MainUI::checkIfPlayerHasWon(std::shared_ptr<Common::Hex> hex)
