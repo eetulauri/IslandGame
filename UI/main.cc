@@ -23,6 +23,7 @@ int main(int argc, char *argv[])
     Dialog Startingdialog;
     int playerCount = 2;
 
+    //Setting up starting dialog and getting the player amount.
     if(Startingdialog.exec() == QDialog::Accepted)
     {
         playerCount = Startingdialog.getSpinBoxValue();
