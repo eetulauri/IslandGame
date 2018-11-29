@@ -8,6 +8,7 @@
 #include "igameboard.hh"
 #include "igamestate.hh"
 #include "iplayer.hh"
+#include "dialog.hh"
 
 
 #include <memory>
@@ -19,15 +20,23 @@ int main(int argc, char *argv[])
 {
 
     QApplication a(argc, argv);
+    Dialog Startingdialog;
+    int playerCount = 2;
 
-
+    if(Startingdialog.exec() == QDialog::Accepted)
+    {
+        playerCount = Startingdialog.getSpinBoxValue();
+    }
+    else{
+        return EXIT_FAILURE;
+    }
 
     std::shared_ptr<Student::GameBoard> gameBoard = std::make_shared<Student::GameBoard>();
     std::shared_ptr<Student::GameState> gameState = std::make_shared<Student::GameState>();
 
     std::vector<std::shared_ptr<Common::IPlayer>> playerVector;
 
-    for( int a = 1; a < 7; a++){
+    for( int a = 0; a < playerCount; a++){
         std::shared_ptr<Student::Player> player1 = std::make_shared<Student::Player>(a);
         playerVector.push_back(player1);
         gameBoard->addPlayer(player1);
