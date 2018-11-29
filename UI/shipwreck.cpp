@@ -1,6 +1,13 @@
 #include "shipwreck.hh"
 
-Shipwreck::Shipwreck()
-{
+namespace Student {
 
+Shipwreck::Shipwreck(int typeId):Common::Actor(typeId){
+
+}
+
+std::string Shipwreck::getActorType() const
+{
+    return "shipwreck";
+}
 }

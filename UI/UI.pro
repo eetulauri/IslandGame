@@ -19,7 +19,8 @@ SOURCES += main.cc \
     gamestate.cpp \
     mainui.cpp \
     player.cpp \
-    dialog.cpp
+    dialog.cpp \
+    shipwreck.cpp
 
 HEADERS  += \
     gameboard.hh \
@@ -27,7 +28,8 @@ HEADERS  += \
     gamestate.hh \
     graphichex.hh \
     mainui.hh \
-    dialog.hh
+    dialog.hh \
+    shipwreck.hh
 
 RESOURCES += \
     images
