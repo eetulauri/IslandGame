@@ -32,6 +32,17 @@ MainUI::MainUI(std::shared_ptr<Student::GameBoard> gameBoard,
     drawHex();
     ui->textEdit->append("Game Start!");
     printCurrentPlayerTurn();
+
+    // giving players their starting coordinates so that their pawns can be
+    // reset back to that position
+    std::vector<Common::CubeCoordinate> coords = gameBoard->calculateCornerPieces();
+    int i = 0;
+    for (auto player : gameBoard_->getPlayerVector()) {
+        player->setStartingCoordinates(coords.at(i));
+        i++;
+    }
+
+
 }
 
 MainUI::~MainUI()
@@ -156,9 +167,6 @@ void MainUI::gamePhaseMovement(std::shared_ptr<Common::Hex> hex)
                 }
             }
 
-
-
-
             checkIfPlayerHasWon(hex);
 
             for (auto &graphicalHex : graphicHexesVector_) {
@@ -205,7 +213,19 @@ void MainUI::gamePhaseSinking(std::shared_ptr<Common::Hex> hex)
         std::vector<std::shared_ptr<Common::Actor> > actorVector = hex->getActors();
         if (actorVector.size() != 0) {
             std::shared_ptr<Common::Actor> actor = actorVector.at(0);
-            actor->doAction();
+            if (actorName == "shark" or actorName == "vortex" or actorName == "seamunster") {
+                actor->doAction();
+                Common::CubeCoordinate coord;
+                for (auto player : gameBoard_->getPlayerVector()) {
+                    if (player->getPlayerId() == gameState_->currentPlayer()) {
+                        coord = player->getStartingCoordinates();
+                    }
+                }
+                gameBoard_->addPawn(gameState_->currentPlayer(), gameState_->currentPlayer(), coord);
+                GraphicHex *graphicalHex = getCorrespondingGraphicHex(gameBoard_->getHex(coord));
+                graphicalHex->update();
+            }
+
         }
 
         graphicHex->resetClicked();
@@ -293,8 +313,6 @@ void MainUI::gamePhaseSpinning(std::shared_ptr<Common::Hex> hex)
                                                           transport_->getId(),
                                                           wheel_.second);
                 }
-
-
 
                 for (auto &graphicalHex : graphicHexesVector_) {
                     if (graphicalHex->getHex() == selectedHex_ or graphicalHex->getHex()== hex) {
