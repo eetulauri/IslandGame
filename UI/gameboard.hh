@@ -45,7 +45,7 @@ public:
 
     void createPawns();
     void addPlayer(std::shared_ptr<Student::Player> player);
-    std::vector<std::shared_ptr<Common::IPlayer>> getPlayerVector();
+    std::vector<std::shared_ptr<Student::Player> > getPlayerVector();
 
     std::vector<Common::CubeCoordinate> calculateCornerPieces();
     std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>> getHexesContainer();
@@ -60,7 +60,7 @@ private:
     std::unordered_map<int, std::shared_ptr<Common::Pawn>> pawnMap_;
     std::unordered_map<int, std::shared_ptr<Common::Actor>> actorMap_;
     std::unordered_map<int, std::shared_ptr<Common::Transport>> transportMap_;
-    std::vector<std::shared_ptr<Common::IPlayer>> players_;
+    std::vector<std::shared_ptr<Student::Player>> players_;
 
 
 };

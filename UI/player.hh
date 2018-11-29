@@ -16,11 +16,14 @@ public:
     int getPlayerId() const;
     void setActionsLeft(unsigned int actionsLeft);
     unsigned int getActionsLeft() const;
+    void addToMovesUsed();
+    int getMovesUsed();
 
 
 private:
     int playerId_;
     int actionsLeft_;
+    int movesUsedCounter_;
 
 };
 }

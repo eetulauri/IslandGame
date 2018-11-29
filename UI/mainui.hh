@@ -18,6 +18,8 @@
 #include <string>
 #include <QObject>
 #include <QString>
+#include <QDialog>
+#include <QMessageBox>
 
 
 namespace Ui {
@@ -45,6 +47,8 @@ public:
     void gamePhaseSpinning(std::shared_ptr<Common::Hex> hex);
 
     void printCurrentPlayerTurn();
+
+    void checkIfPlayerHasWon(std::shared_ptr<Common::Hex> hex);
 
 
 

@@ -37,8 +37,6 @@ int main(int argc, char *argv[])
     std::vector<std::shared_ptr<Common::IPlayer>> playerVector;
 
 
-
-
     for( int a = 1; a < playerCount+1; a++){
         std::shared_ptr<Student::Player> player1 = std::make_shared<Student::Player>(a);
         playerVector.push_back(player1);
