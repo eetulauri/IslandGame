@@ -240,10 +240,10 @@ void Student::GameBoard::createPawns()
 {
     std::vector<Common::CubeCoordinate> cornerPieces = calculateCornerPieces();
 
+
     for (long unsigned int i = 1; i < players_.size()+1; i++) {
         addPawn(i, i, cornerPieces.at(i-1));
     }
-
 
 }
 
@@ -273,6 +273,11 @@ std::vector<Common::CubeCoordinate> Student::GameBoard::calculateCornerPieces()
 std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex> > Student::GameBoard::getHexesContainer()
 {
     return hexesMap_;
+}
+
+std::unordered_map<int, std::shared_ptr<Common::Pawn> > Student::GameBoard::getPawnMap()
+{
+    return pawnMap_;
 }
 
 
