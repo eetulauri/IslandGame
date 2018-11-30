@@ -46,6 +46,25 @@ GameBoard:
   dependencies: 
     - BuildUnitTests
 
+#
+GameState:
+  stage: test
+  tags:
+    - qt
+  before_script:
+    - mkdir -p coverage/UnitTests
+  script: 
+    - cd Tests/UnitTests/GameState/
+    - ./bin/tst_gamestatetest
+    - gcov *.gcno -r
+    #- cp gamestate.*.gcov ../../../coverage/UnitTests
+  artifacts:
+    paths:
+      - "Tests/UnitTests/*/gamestate.*.gcov"
+    expire_in: 2d
+  dependencies: 
+    - BuildUnitTests
+
 # Compile and prepare the source code for analysis.
 # The output is stored in directory bw_output
 PrepareAnalysis:
@@ -78,6 +97,7 @@ PerformAnalysis:
   dependencies:
     - PrepareAnalysis
     - GameBoard
+    - GameState
 
 # Performs the normal analysis and sends results to SonarQube
 PerformBranchAnalysis:
@@ -94,3 +114,4 @@ PerformBranchAnalysis:
   dependencies:
     - PrepareAnalysis
     - GameBoard
+    - GameState

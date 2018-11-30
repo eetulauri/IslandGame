@@ -417,16 +417,20 @@ void MainUI::checkIfPlayerHasWon(std::shared_ptr<Common::Hex> hex)
         hasWonMessage.append(" has won the game!!! It took just ");
 
         int movesUsed = 0;
+        int pawnKills = 0;
         int playerId = gameState_->currentPlayer();
         for (auto player : gameBoard_->getPlayerVector()) {
             if (player->getPlayerId() == playerId) {
                 std::shared_ptr<Student::Player> playerShared = player;
                  movesUsed = playerShared->getMovesUsed();
+                 pawnKills = playerShared->getPawnKills();
                 break;
             }
         }
         hasWonMessage.append(QString::number(movesUsed));
         hasWonMessage.append(" moves!");
+        hasWonMessage.append(" Pawns killed: ");
+        hasWonMessage.append(QString::number(pawnKills));
         QMessageBox::information(this, "Winner winner chicken dinner", hasWonMessage);
         exit(0);
 
