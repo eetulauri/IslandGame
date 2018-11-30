@@ -13,6 +13,7 @@ TEMPLATE = app
 CONFIG += c++14
 
 
+
 SOURCES += main.cc \
     graphichex.cpp \
     gameboard.cpp \

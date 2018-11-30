@@ -1,6 +1,8 @@
 #include "mainui.hh"
 #include "ui_mainui.h"
 
+
+
 MainUI::MainUI(std::shared_ptr<Student::GameBoard> gameBoard,
                std::shared_ptr<Common::IGameRunner> gameRunner,
                std::shared_ptr<Student::GameState> gameState,
@@ -512,13 +514,39 @@ void MainUI::nextPhase()
 
 void MainUI::spinWheel()
 {
+    std::unordered_map<std::string, std::string> imageMap = {{"dolphin", ":/images/dolphin.png"},
+                                                        {"shark", ":/images/shark.png"},
+                                                        {"kraken", ":/images/kraken.png"},
+                                                        {"seamunster", ":/images/seamunster.png"}};
     wheel_ = gameRunner_->spinWheel();
+
 
     QString str = QString::fromStdString(wheel_.first);
     str.append(" moves ");
     str.append(QString::fromStdString(wheel_.second));
     str.append(" steps.");
     ui->textEdit->append(str);
+    QString imgAdress;
+    QPixmap pix;
+    pix = pix.scaledToWidth(200);
+    pix = pix.scaledToHeight(300);
+
+    for (int a = 10; a< 20; a= a+1){
+        int randomPic = rand() % 3;
+
+        imageMap.at(randomPic);
+    }
+    for (auto &type : imageMap)
+    {
+        if(wheel_.first == type.first){
+
+            imgAdress = QString::fromStdString(type.second);
+        }
+    }
+    pix.load(imgAdress);
+    ui->pictureLabel->setPixmap(pix);
+
+
 
     // enabling moving actors after the wheel is spun
     moveActors_ = true;

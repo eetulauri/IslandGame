@@ -20,6 +20,9 @@
 #include <QString>
 #include <QDialog>
 #include <QMessageBox>
+#include <QPixmap>
+#include <random>
+#include <memory>
 
 
 namespace Ui {
