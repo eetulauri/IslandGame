@@ -275,4 +275,9 @@ std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex> > Student::GameBoa
     return hexesMap_;
 }
 
+std::unordered_map<int, std::shared_ptr<Common::Pawn> > Student::GameBoard::getPawnMap()
+{
+    return pawnMap_;
+}
+
 

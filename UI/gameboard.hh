@@ -51,7 +51,7 @@ public:
 
     std::vector<Common::CubeCoordinate> calculateCornerPieces();
     std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>> getHexesContainer();
-
+    std::unordered_map<int, std::shared_ptr<Common::Pawn>> getPawnMap();
 
 
 

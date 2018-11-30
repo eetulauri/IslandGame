@@ -50,6 +50,9 @@ public:
 
     void checkIfPlayerHasWon(std::shared_ptr<Common::Hex> hex);
 
+    void spawnNewPawn(int playerId);
+
+
 
 
 public slots:
