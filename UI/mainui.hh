@@ -23,6 +23,8 @@
 #include <QPixmap>
 #include <random>
 #include <memory>
+#include <chrono>
+#include <thread>
 
 
 namespace Ui {

@@ -514,10 +514,20 @@ void MainUI::nextPhase()
 
 void MainUI::spinWheel()
 {
+
     std::unordered_map<std::string, std::string> imageMap = {{"dolphin", ":/images/dolphin.png"},
                                                         {"shark", ":/images/shark.png"},
                                                         {"kraken", ":/images/kraken.png"},
                                                         {"seamunster", ":/images/seamunster.png"}};
+
+
+
+
+    std::vector<std::string> imageVector = {":/images/dolphin.png",
+                                            ":/images/shark.png",
+                                            ":/images/kraken.png",
+                                            ":/images/seamunster.png"};
+
     wheel_ = gameRunner_->spinWheel();
 
 
@@ -525,17 +535,26 @@ void MainUI::spinWheel()
     str.append(" moves ");
     str.append(QString::fromStdString(wheel_.second));
     str.append(" steps.");
-    ui->textEdit->append(str);
     QString imgAdress;
+    QString imageUrl;
     QPixmap pix;
-    pix = pix.scaledToWidth(200);
-    pix = pix.scaledToHeight(300);
+    QFont f("Arial",200);
+    ui->numLabel->setFont(f);
 
-    for (int a = 10; a< 20; a= a+1){
-        int randomPic = rand() % 3;
 
-        imageMap.at(randomPic);
+    for (int a = 1; a< 25; a= a+1){
+        int randomNum = rand() % 4;
+
+        imageUrl = QString::fromStdString(imageVector.at(randomNum));
+        pix.load(imageUrl);
+        pix = pix.scaledToWidth(220);
+        ui->pictureLabel->setPixmap(pix);
+
+        ui->numLabel->setText(QString::number(randomNum));
+        repaint();
+        std::this_thread::sleep_for(std::chrono::milliseconds(70));
     }
+
     for (auto &type : imageMap)
     {
         if(wheel_.first == type.first){
@@ -544,9 +563,10 @@ void MainUI::spinWheel()
         }
     }
     pix.load(imgAdress);
+    pix = pix.scaledToWidth(220);
     ui->pictureLabel->setPixmap(pix);
-
-
+    ui->textEdit->append(str);
+    ui->numLabel->setText(QString::fromStdString(wheel_.second));
 
     // enabling moving actors after the wheel is spun
     moveActors_ = true;
