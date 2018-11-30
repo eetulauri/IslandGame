@@ -32,6 +32,17 @@ MainUI::MainUI(std::shared_ptr<Student::GameBoard> gameBoard,
     drawHex();
     ui->textEdit->append("Game Start!");
     printCurrentPlayerTurn();
+
+    // giving players their starting coordinates so that their pawns can be
+    // reset back to that position
+    std::vector<Common::CubeCoordinate> coords = gameBoard->calculateCornerPieces();
+    int i = 0;
+    for (auto player : gameBoard_->getPlayerVector()) {
+        player->setStartingCoordinates(coords.at(i));
+        i++;
+    }
+
+
 }
 
 MainUI::~MainUI()
@@ -126,8 +137,75 @@ void MainUI::gamePhaseMovement(std::shared_ptr<Common::Hex> hex)
     else {
         try {
             // moving the pawn. return value is not needed since we're only permitting moving once per turn
+            std::vector<std::shared_ptr<Common::Transport> > transports = selectedHex_->getTransports();
+            bool isPawnInTransport = false;
+            std::shared_ptr<Common::Transport> transport;
+            if (transports.size() != 0) {
+                transport = transports.at(0);
+                isPawnInTransport = transport->isPawnInTransport(pawn_);
+            }
+            if (isPawnInTransport == true) {
+                if (hex->getPawnAmount() != 0) {
+                    std::vector<std::shared_ptr<Common::Pawn> > pawns = hex->getPawns();
+                    int pawnId = pawns.at(0)->getPlayerId();
+                    hex->clearPawnsFromTerrain();
+                    spawnNewPawn(pawnId);
+                    if (selectedHex_->getCoordinates() == hex->getCoordinates()) {
+                        ui->textEdit->append("whoopsie daisy, you just ate yourself! Better luck next time =)");
+                    }
+                    int playerId = gameState_->currentPlayer();
+                    for (auto player : gameBoard_->getPlayerVector()) {
+                        if (player->getPlayerId() == playerId) {
+                            std::shared_ptr<Student::Player> playerShared = player;
+                            playerShared->addToPawnKills();
+                            break;
+                        }
+                    }
+                }
+                if (hex->getPieceType() == "Water") {
+                    transport->move(hex);
+                    transport->removePawns();
+                    ui->textEdit->append("Pawn was removed from transport!");
+                } else {
+                    // resetting all clicked hex tiles
+                    for (auto &graphicalHex : graphicHexesVector_) {
+                        if (graphicalHex->getHex() == selectedHex_ or graphicalHex->getHex()== hex) {
+                            graphicalHex->resetClicked();
+                        }
+                    }
+                    ui->textEdit->append("Silly you, this transport can't move on land.");
+                    selectedHex_ = nullptr;
+                    pawn_ = nullptr;
+                    return;
+                }
 
-            gameRunner_->movePawn(selectedHex_->getCoordinates(), hex->getCoordinates(), pawn_->getId());
+            } else {
+                if (hex->getPawnAmount() != 0) {
+                    std::vector<std::shared_ptr<Common::Pawn> > pawns = hex->getPawns();
+                    int pawnId = pawns.at(0)->getPlayerId();
+                    hex->clearPawnsFromTerrain();
+                    spawnNewPawn(pawnId);
+                    if (selectedHex_->getCoordinates() == hex->getCoordinates()) {
+                        ui->textEdit->append("whoopsie daisy, you just ate yourself! Better luck next time =)");
+                    }
+                    int playerId = gameState_->currentPlayer();
+                    for (auto player : gameBoard_->getPlayerVector()) {
+                        if (player->getPlayerId() == playerId) {
+                            std::shared_ptr<Student::Player> playerShared = player;
+                            playerShared->addToPawnKills();
+                            break;
+                        }
+                    }
+                }
+                gameRunner_->movePawn(selectedHex_->getCoordinates(), hex->getCoordinates(), pawn_->getId());
+                std::vector<std::shared_ptr<Common::Transport> > transports1 = hex->getTransports();
+                if (transports1.size() != 0) {
+                    std::shared_ptr<Common::Transport> transport1 = transports1.at(0);
+                    transport1->addPawn(pawn_);
+                    ui->textEdit->append("Pawn was added to transport!");
+                }
+            }
+
             int playerId = gameState_->currentPlayer();
             for (auto player : gameBoard_->getPlayerVector()) {
                 if (player->getPlayerId() == playerId) {
@@ -146,10 +224,8 @@ void MainUI::gamePhaseMovement(std::shared_ptr<Common::Hex> hex)
             }
 
             selectedHex_ = nullptr;
-            pawn_ = nullptr;
 
             nextPhase();
-
 
         }
         catch(Common::IllegalMoveException &i)
@@ -174,7 +250,44 @@ void MainUI::gamePhaseSinking(std::shared_ptr<Common::Hex> hex)
 
     GraphicHex *graphicHex = getCorrespondingGraphicHex(hex);
     try {
-        gameRunner_->flipTile(hex->getCoordinates());
+        std::string actorName = gameRunner_->flipTile(hex->getCoordinates());
+
+        QString actorSpawnMessage = "Flipped tile! ";
+        actorSpawnMessage.append(QString::fromStdString(actorName));
+        actorSpawnMessage.append(" spawned!");
+        ui->textEdit->append(actorSpawnMessage);
+
+        std::vector<std::shared_ptr<Common::Actor> > actorVector = hex->getActors();
+        if (actorVector.size() != 0) {
+            std::shared_ptr<Common::Actor> actor = actorVector.at(0);
+            std::shared_ptr<Common::Pawn> pawn = nullptr;
+            for (auto &element : gameBoard_->getPawnMap()) {
+                if (element.first == gameState_->currentPlayer()) {
+                    pawn = element.second;
+                    break;
+                }
+            }
+            if (actorName == "shark" or actorName == "seamunster") {
+                actor->doAction();
+
+                if (pawn->getCoordinates() == hex->getCoordinates()) {
+                    spawnNewPawn(gameState_->currentPlayer());
+                }
+
+            } else if (actorName == "vortex") {
+                actor->doAction();
+                for (auto coord : hex->getNeighbourVector()) {
+                    if (pawn->getCoordinates() == coord) {
+                        spawnNewPawn(gameState_->currentPlayer());
+                    }
+                }
+                if (pawn->getCoordinates() == hex->getCoordinates()) {
+                    spawnNewPawn(gameState_->currentPlayer());
+                }
+            }
+
+        }
+
         graphicHex->resetClicked();
         graphicHex->changeType(hex->getPieceType());
         nextPhase();
@@ -244,8 +357,6 @@ void MainUI::gamePhaseSpinning(std::shared_ptr<Common::Hex> hex)
                 return;
             }
 
-
-
         }
         // the second click
         else {
@@ -262,8 +373,6 @@ void MainUI::gamePhaseSpinning(std::shared_ptr<Common::Hex> hex)
                                                           transport_->getId(),
                                                           wheel_.second);
                 }
-
-
 
                 for (auto &graphicalHex : graphicHexesVector_) {
                     if (graphicalHex->getHex() == selectedHex_ or graphicalHex->getHex()== hex) {
@@ -291,10 +400,12 @@ void MainUI::gamePhaseSpinning(std::shared_ptr<Common::Hex> hex)
 
 void MainUI::printCurrentPlayerTurn()
 {
+    ui->textEdit->setTextColor(Qt::red);
     QString str = "Player ";
     str.append(QString::number(gameState_->currentPlayer()));
     str.append("'s turn");
     ui->textEdit->append(str);
+    ui->textEdit->setTextColor(Qt::black);
 }
 
 void MainUI::checkIfPlayerHasWon(std::shared_ptr<Common::Hex> hex)
@@ -322,6 +433,24 @@ void MainUI::checkIfPlayerHasWon(std::shared_ptr<Common::Hex> hex)
     }
 }
 
+void MainUI::spawnNewPawn(int playerId)
+{
+    Common::CubeCoordinate coord;
+    for (auto player : gameBoard_->getPlayerVector()) {
+        if (player->getPlayerId() == playerId) {
+            coord = player->getStartingCoordinates();
+        }
+    }
+    gameBoard_->addPawn(playerId, playerId, coord);
+    GraphicHex *graphicalHex = getCorrespondingGraphicHex(gameBoard_->getHex(coord));
+    graphicalHex->update();
+    ui->textEdit->append("Truly unfortunate. A pawn has fallen in battle "
+                         "but the war has not yet been lost! "
+                         "A new recruit has arrived to base, make good use of him.");
+
+}
+
+
 void MainUI::givePawnNewCoordinates(std::shared_ptr<Common::Hex> hex)
 {
     if (gameState_->currentGamePhase() == Common::MOVEMENT)
@@ -346,7 +475,7 @@ void MainUI::nextPhase()
         ui->textEdit->append("Game Phase changed to: Sinking");
         printCurrentPlayerTurn();
         selectedHex_ = nullptr;
-        pawn_ = nullptr;
+
     } else if (gameState_->currentGamePhase() == Common::SINKING) {
         gameState_->changeGamePhase(Common::SPINNING);
         ui->textEdit->append("Game Phase changed to: Spinning");
