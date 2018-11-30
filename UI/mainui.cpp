@@ -542,15 +542,20 @@ void MainUI::spinWheel()
     ui->numLabel->setFont(f);
 
 
-    for (int a = 1; a< 25; a= a+1){
+    for (int a = 1; a< 15; a= a+1){
         int randomNum = rand() % 4;
 
         imageUrl = QString::fromStdString(imageVector.at(randomNum));
         pix.load(imageUrl);
         pix = pix.scaledToWidth(220);
-        ui->pictureLabel->setPixmap(pix);
 
-        ui->numLabel->setText(QString::number(randomNum));
+        randomNum += 1;
+        if (randomNum == 4){
+            ui->numLabel->setText("D");
+        }else{
+            ui->numLabel->setText(QString::number(randomNum));
+        }
+        ui->pictureLabel->setPixmap(pix);
         repaint();
         std::this_thread::sleep_for(std::chrono::milliseconds(70));
     }
