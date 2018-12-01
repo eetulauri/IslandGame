@@ -521,12 +521,11 @@ void MainUI::spinWheel()
                                                         {"seamunster", ":/images/seamunster.png"}};
 
 
+    std::vector<std::string> imageVector;
 
-
-    std::vector<std::string> imageVector = {":/images/dolphin.png",
-                                            ":/images/shark.png",
-                                            ":/images/kraken.png",
-                                            ":/images/seamunster.png"};
+    for (auto &type :imageMap){
+        imageVector.push_back(type.second);
+    }
 
     wheel_ = gameRunner_->spinWheel();
 
@@ -578,4 +577,21 @@ void MainUI::spinWheel()
 
 }
 
+void MainUI::wheelEvent(QWheelEvent *event)
+{
+    ui->graphicsView->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+    // Scale the view / do the zoom
+    double scaleFactor = 1.15;
+    if(event->delta() > 0) {
+        // Zoom in
+        ui->graphicsView-> scale(scaleFactor, scaleFactor);
+
+    } else {
+        // Zooming out
+         ui->graphicsView->scale(1.0 / scaleFactor, 1.0 / scaleFactor);
+    }
+
+
+    //ui->graphicsView->setTransform(QTransform(h11, h12, h21, h22, 0, 0));
+}
 
