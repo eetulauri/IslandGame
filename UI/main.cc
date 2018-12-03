@@ -1,3 +1,13 @@
+// Ohjelmoinnin tekniikat project
+// 3.12.2018
+// Eetu Pulkkinen, studentnumber: 275184
+// eetu.pulkkinen@student.tut.fi
+// Juho Karhunen, studentnumber: 267562
+// juho.karhunen@student.tut.fi
+// Island game  is a board game. Game board consists of hexagonal tiles
+// and the goal is to get to the center of the board
+// full game rules are listed in the documentation
+
 #include "gameboard.hh"
 #include "gamestate.hh"
 #include "player.hh"
