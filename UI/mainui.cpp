@@ -631,7 +631,5 @@ void MainUI::wheelEvent(QWheelEvent *event)
          ui->graphicsView->scale(1.0 / scaleFactor, 1.0 / scaleFactor);
     }
 
-
-    //ui->graphicsView->setTransform(QTransform(h11, h12, h21, h22, 0, 0));
 }
 
