@@ -26,6 +26,7 @@ int main(int argc, char *argv[])
     Dialog Startingdialog;
     int playerCount = 2;
 
+    //Setting up starting dialog and getting the player amount.
     if(Startingdialog.exec() == QDialog::Accepted)
     {
         playerCount = Startingdialog.getSpinBoxValue();
@@ -38,6 +39,7 @@ int main(int argc, char *argv[])
     std::shared_ptr<Student::GameState> gameState = std::make_shared<Student::GameState>();
 
     std::vector<std::shared_ptr<Common::IPlayer>> playerVector;
+
 
     for( int a = 1; a < playerCount+1; a++){
         std::shared_ptr<Student::Player> player1 = std::make_shared<Student::Player>(a);

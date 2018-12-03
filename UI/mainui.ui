@@ -40,14 +40,40 @@
          </widget>
         </item>
         <item>
-         <widget class="QGraphicsView" name="graphicsView_2">
-          <property name="maximumSize">
-           <size>
-            <width>600</width>
-            <height>16777215</height>
-           </size>
-          </property>
-         </widget>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QLabel" name="numLabel">
+            <property name="maximumSize">
+             <size>
+              <width>300</width>
+              <height>500</height>
+             </size>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="pictureLabel">
+            <property name="maximumSize">
+             <size>
+              <width>300</width>
+              <height>500</height>
+             </size>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item>
          <widget class="QPushButton" name="skipTurnButton">
@@ -67,7 +93,7 @@
           <property name="maximumSize">
            <size>
             <width>600</width>
-            <height>16777215</height>
+            <height>500</height>
            </size>
           </property>
          </widget>
