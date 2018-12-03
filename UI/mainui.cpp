@@ -30,6 +30,7 @@ MainUI::MainUI(std::shared_ptr<Student::GameBoard> gameBoard,
 
     // draws the board
     drawHex();
+
     ui->textEdit->append("Game Start!");
     printCurrentPlayerTurn();
 
@@ -136,7 +137,26 @@ void MainUI::gamePhaseMovement(std::shared_ptr<Common::Hex> hex)
     // if its the 2nd click
     else {
         try {
-            // moving the pawn. return value is not needed since we're only permitting moving once per turn
+            //checking that the player is not trying to move to a hex with a shark
+            // or a seamunster
+            std::vector<std::shared_ptr<Common::Actor> > actors = hex->getActors();
+            if (actors.size() != 0) {
+                std::shared_ptr<Common::Actor> actor = actors.at(0);
+
+                if (actor->getActorType() == "shark" or actor->getActorType() == "seamunster") {
+                    ui->textEdit->append("You most certainly don't want to move there...");
+                    // resetting clicked tiles
+                    for (auto &graphicalHex : graphicHexesVector_) {
+                        if (graphicalHex->getHex() == selectedHex_ or graphicalHex->getHex()== hex) {
+                            graphicalHex->resetClicked();
+                        }
+                    }
+                    selectedHex_ = nullptr;
+                    pawn_ = nullptr;
+                    return;
+                }
+            }
+
             std::vector<std::shared_ptr<Common::Transport> > transports = selectedHex_->getTransports();
             bool isPawnInTransport = false;
             std::shared_ptr<Common::Transport> transport;
@@ -179,7 +199,8 @@ void MainUI::gamePhaseMovement(std::shared_ptr<Common::Hex> hex)
                     return;
                 }
 
-            } else {
+            }
+            else {
                 if (hex->getPawnAmount() != 0) {
                     std::vector<std::shared_ptr<Common::Pawn> > pawns = hex->getPawns();
                     int pawnId = pawns.at(0)->getPlayerId();
@@ -197,6 +218,7 @@ void MainUI::gamePhaseMovement(std::shared_ptr<Common::Hex> hex)
                         }
                     }
                 }
+                // moving the pawn. return value is not needed since we're only permitting moving once per turn
                 gameRunner_->movePawn(selectedHex_->getCoordinates(), hex->getCoordinates(), pawn_->getId());
                 std::vector<std::shared_ptr<Common::Transport> > transports1 = hex->getTransports();
                 if (transports1.size() != 0) {
@@ -361,11 +383,25 @@ void MainUI::gamePhaseSpinning(std::shared_ptr<Common::Hex> hex)
         // the second click
         else {
             try {
-                if (actor_ != nullptr) {
+                if (actor_ != nullptr) {                   
+                    if (actor_->getActorType() == "shark" or actor_->getActorType() == "seamunster") {
+                        actor_->doAction();
+                        if (hex->getPawnAmount() != 0) {
+                            std::shared_ptr<Common::Pawn> pawn = hex->getPawns().at(0);
+                            spawnNewPawn(pawn->getPlayerId());
+                            hex->removePawn(pawn);
+                        }
+                    }
                     gameRunner_->moveActor(selectedHex_->getCoordinates(),
                                            hex->getCoordinates(),
                                            actor_->getId(),
                                            wheel_.second);
+
+                    if (actor_->getActorType() == "kraken") {
+                        actor_->doAction();
+                        ui->textEdit->append("Transport destroyed!");
+
+                    }
 
                 } else if (transport_ != nullptr) {
                     gameRunner_->moveTransportWithSpinner(selectedHex_->getCoordinates(),

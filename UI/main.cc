@@ -9,12 +9,15 @@
 #include "igamestate.hh"
 #include "iplayer.hh"
 #include "dialog.hh"
+#include "ioexception.hh"
+#include "formatexception.hh"
 
 
 #include <memory>
 #include <iostream>
 #include <QApplication>
 #include <QObject>
+#include <exception>
 
 int main(int argc, char *argv[])
 {
@@ -42,22 +45,24 @@ int main(int argc, char *argv[])
         gameBoard->addPlayer(player1);
     }
 
-    //gameState->changeGamePhase(Common::GamePhase::MOVEMENT);
-    //std::shared_ptr<Logic::GameEngine> gameEngine
-      //      = std::shared_ptr<Logic::GameEngine>(new Logic::GameEngine(gameBoard, gameState, playerVector));
+    std::shared_ptr<Common::IGameRunner> gameRunner;
+    try {
+        gameRunner = Common::Initialization::getGameRunner(gameBoard, gameState, playerVector);
 
-
-    //std::shared_ptr<Common::IGameRunner> gameRunner
-            //= std::shared_ptr<Logic::GameEngine>(new Common::IGameRunner(gameBoard, gameState, playerVector));
-    std::shared_ptr<Common::IGameRunner> gameRunner
-            = Common::Initialization::getGameRunner(gameBoard, gameState, playerVector);
+    }
+    catch(Common::IoException &i) {
+        std::cout << i.msg() << std::endl;
+        return EXIT_FAILURE;
+    }
+    catch(Common::FormatException &i) {
+        std::cout << i.msg() << std::endl;
+        return EXIT_FAILURE;
+    }
 
     gameBoard->createPawns();
     MainUI w(gameBoard, gameRunner, gameState);
-    //w.initializeGameRunner(gameRunner);
-
-
     w.show();
+
 
 
     return a.exec();
