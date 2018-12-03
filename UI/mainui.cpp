@@ -1,6 +1,8 @@
 #include "mainui.hh"
 #include "ui_mainui.h"
 
+
+
 MainUI::MainUI(std::shared_ptr<Student::GameBoard> gameBoard,
                std::shared_ptr<Common::IGameRunner> gameRunner,
                std::shared_ptr<Student::GameState> gameState,
@@ -516,17 +518,84 @@ void MainUI::nextPhase()
 
 void MainUI::spinWheel()
 {
+
+    std::unordered_map<std::string, std::string> imageMap = {{"dolphin", ":/images/dolphin.png"},
+                                                        {"shark", ":/images/shark.png"},
+                                                        {"kraken", ":/images/kraken.png"},
+                                                        {"seamunster", ":/images/seamunster.png"}};
+
+
+    std::vector<std::string> imageVector;
+
+    for (auto &type :imageMap){
+        imageVector.push_back(type.second);
+    }
+
     wheel_ = gameRunner_->spinWheel();
+
 
     QString str = QString::fromStdString(wheel_.first);
     str.append(" moves ");
     str.append(QString::fromStdString(wheel_.second));
     str.append(" steps.");
+    QString imgAdress;
+    QString imageUrl;
+    QPixmap pix;
+    QFont f("Arial",200);
+    ui->numLabel->setFont(f);
+
+
+    for (int a = 1; a< 15; a= a+1){
+        int randomNum = rand() % 4;
+
+        imageUrl = QString::fromStdString(imageVector.at(randomNum));
+        pix.load(imageUrl);
+        pix = pix.scaledToWidth(220);
+
+        randomNum += 1;
+        if (randomNum == 4){
+            ui->numLabel->setText("D");
+        }else{
+            ui->numLabel->setText(QString::number(randomNum));
+        }
+        ui->pictureLabel->setPixmap(pix);
+        repaint();
+        std::this_thread::sleep_for(std::chrono::milliseconds(70));
+    }
+
+    for (auto &type : imageMap)
+    {
+        if(wheel_.first == type.first){
+
+            imgAdress = QString::fromStdString(type.second);
+        }
+    }
+    pix.load(imgAdress);
+    pix = pix.scaledToWidth(220);
+    ui->pictureLabel->setPixmap(pix);
     ui->textEdit->append(str);
+    ui->numLabel->setText(QString::fromStdString(wheel_.second));
 
     // enabling moving actors after the wheel is spun
     moveActors_ = true;
 
 }
 
+void MainUI::wheelEvent(QWheelEvent *event)
+{
+    ui->graphicsView->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+    // Scale the view / do the zoom
+    double scaleFactor = 1.15;
+    if(event->delta() > 0) {
+        // Zoom in
+        ui->graphicsView-> scale(scaleFactor, scaleFactor);
+
+    } else {
+        // Zooming out
+         ui->graphicsView->scale(1.0 / scaleFactor, 1.0 / scaleFactor);
+    }
+
+
+    //ui->graphicsView->setTransform(QTransform(h11, h12, h21, h22, 0, 0));
+}
 

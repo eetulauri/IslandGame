@@ -20,6 +20,12 @@
 #include <QString>
 #include <QDialog>
 #include <QMessageBox>
+#include <QPixmap>
+#include <random>
+#include <memory>
+#include <chrono>
+#include <thread>
+#include <QWheelEvent>
 
 
 namespace Ui {
@@ -61,7 +67,8 @@ public slots:
     void nextPhase();
     void spinWheel();
 
-
+protected:
+    virtual void wheelEvent(QWheelEvent* event);
 
 private:
     Ui::MainUI *ui;
